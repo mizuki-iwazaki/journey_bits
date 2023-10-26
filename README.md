@@ -85,3 +85,7 @@ SNSや記事作成にてサービスの拡散を考えています。
 
 * デプロイ先
   * Herokuを検討中です。
+
+* 画面遷移図
+  * Figma
+  * https://www.figma.com/file/ff5QsZEaNQnqq7jeKcKERm/Untitled?type=design&node-id=0%3A1&mode=design&t=hj6y5WgwT7OO1FuS-1
