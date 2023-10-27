@@ -88,4 +88,4 @@ SNSや記事作成にてサービスの拡散を考えています。
 
 * 画面遷移図
   * Figma
-  * https://www.figma.com/file/ff5QsZEaNQnqq7jeKcKERm/Untitled?type=design&node-id=0%3A1&mode=design&t=hj6y5WgwT7OO1FuS-1
+  * https://www.figma.com/file/ff5QsZEaNQnqq7jeKcKERm/Untitled?type=design&node-id=0%3A1&mode=design&t=9iFCA1qiQfvr6ban-1
