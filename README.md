@@ -91,4 +91,4 @@ SNSや記事作成にてサービスの拡散を考えています。
   * https://www.figma.com/file/ff5QsZEaNQnqq7jeKcKERm/Untitled?type=design&node-id=0%3A1&mode=design&t=9iFCA1qiQfvr6ban-1
 
 * ER図
-  * https://gyazo.com/ce551891e17b8d8a4cc1110c5b372b8a
+  * https://gyazo.com/7de45135564d571dabef9e976f0a342c
