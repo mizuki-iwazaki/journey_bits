@@ -16,8 +16,9 @@ const Header = () => {
               </Link>
             </li>   
             <li className="ml-4">
-              {/* <Link to="/login">ログイン</Link> */}
-              ログイン
+              <Link to="/login" className="text-xm">
+                ログイン
+              </Link>
             </li>         
           </ul>
         </nav>

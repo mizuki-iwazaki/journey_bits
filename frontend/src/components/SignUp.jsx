@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
-  const [name, setName] = useState('');
+  const [name, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
@@ -27,7 +27,7 @@ export default function SignUp() {
 
 
   // APIリクエスト
-  axios.post('http://localhost:3000/api/v1/users', userData)
+  axios.post(`${process.env.REACT_APP_API_URL}/api/v1/users`, userData)
   .then(response => {
     // 成功時の処理
     console.log(response.data);
@@ -52,11 +52,11 @@ export default function SignUp() {
           type="text"
           placeholder="Name"
           value={name}
-          onChange={(event) => setName(event.target.value)}
+          onChange={(event) => setUserName(event.target.value)}
         />
       </div>
       <div className="mb-4">
-         <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+        <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
           Email:
         </label>
         <input
