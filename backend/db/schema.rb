@@ -10,15 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_19_120029) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_29_123311) do
+  create_table "api_keys", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "access_token", null: false
+    t.datetime "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["access_token"], name: "index_api_keys_on_access_token", unique: true
+    t.index ["user_id"], name: "index_api_keys_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
+    t.string "name", null: false
     t.string "email", null: false
     t.string "crypted_password"
     t.string "salt"
-    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "api_keys", "users"
 end

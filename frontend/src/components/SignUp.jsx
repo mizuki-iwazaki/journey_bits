@@ -27,7 +27,7 @@ export default function SignUp() {
 
 
   // APIリクエスト
-  axios.post(`${process.env.REACT_APP_API_URL}/api/v1/users`, userData)
+  axios.post(`${process.env.REACT_APP_API_URL}/api/v1/registration`, userData)
   .then(response => {
     // 成功時の処理
     console.log(response.data);

@@ -19,7 +19,7 @@ export default function Login() {
     e.preventDefault();
     try {
       // APIへログインのリクエスト
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/login`, { email, password });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/authentication`, { email, password });
       console.log(response.data);
       // ログイン成功時、post一覧へリダイレクト
       navigate('/posts');

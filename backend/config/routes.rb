@@ -1,11 +1,9 @@
 Rails.application.routes.draw do
   root 'toppages#home'
-  namespace :api do
+  namespace :api, format: 'json' do
     namespace :v1 do
-      resources :users
-      get 'login', to: 'user_sessions#new'
-      post 'login' => 'user_sessions#create'
-      delete 'logout' => 'user_sessions#destroy', :as => :logout
+      resource :registration, only: %i[create]
+      resource :authentication, only: %i[create]
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
