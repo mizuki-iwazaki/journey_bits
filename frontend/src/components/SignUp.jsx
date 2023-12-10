@@ -41,64 +41,66 @@ export default function SignUp() {
 
   // フォームのUI
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-20">
-      <div className="mb-4">
-        <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
-        Name:
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="name"
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(event) => setUserName(event.target.value)}
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-          Email:
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="email"
-          type="text"
-          placeholder="Email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
-          Password:
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="password"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="passwordConfirmation" className="block text-gray-700 text-sm font-bold mb-2">
-          Password Confirmation:
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="passwordConfirmation"
-          type="password"
-          placeholder="Confirm Password"
-          value={passwordConfirmation}
-          onChange={(event) => setPasswordConfirmation(event.target.value)}
-        />
-      </div>
-      <div className="flex justify-center">
-        <button className="mr-4 inline-flex text-white bg-custom-turquoise hover:bg-custom-hover-turquoise border-0 py-2 px-6 focus:outline-none rounded text-lg">
-          新規登録
-        </button>
-      </div>
-    </form>
+    <div className="form-container">
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-20">
+        <div className="mb-4">
+          <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
+          Name:
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="name"
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(event) => setUserName(event.target.value)}
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+            Email:
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="email"
+            type="text"
+            placeholder="Email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
+            Password:
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="password"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="passwordConfirmation" className="block text-gray-700 text-sm font-bold mb-2">
+            Password Confirmation:
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="passwordConfirmation"
+            type="password"
+            placeholder="Confirm Password"
+            value={passwordConfirmation}
+            onChange={(event) => setPasswordConfirmation(event.target.value)}
+          />
+        </div>
+        <div className="flex justify-center">
+          <button className="mr-4 inline-flex text-white bg-custom-turquoise hover:bg-custom-hover-turquoise border-0 py-2 px-6 focus:outline-none rounded text-lg">
+            新規登録
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
