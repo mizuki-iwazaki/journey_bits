@@ -9,6 +9,8 @@ class User < ApplicationRecord
   validates :email, uniqueness: true, presence: true
   validates :name, presence: true, length: { maximum: 255 }
 
+  enum role: { user: 0, admin: 1 }
+
   def activate_api_key!
     return api_keys.active.first if api_keys.active.exists?
 
