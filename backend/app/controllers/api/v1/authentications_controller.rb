@@ -13,6 +13,11 @@ module Api
 
         render json: json_string
       end
+
+      def destroy
+        current_user&.deactivate_api_key!
+        head :ok
+      end
     end
   end
 end

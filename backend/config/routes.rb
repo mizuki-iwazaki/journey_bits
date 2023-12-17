@@ -3,7 +3,9 @@ Rails.application.routes.draw do
   namespace :api, format: 'json' do
     namespace :v1 do
       resource :registration, only: %i[create]
-      resource :authentication, only: %i[create]
+      resource :authentication, only: %i[create destroy]
+      resources :themes, only: %i[index create destroy]
+      resources :posts, only: %i[index show create update destroy]
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

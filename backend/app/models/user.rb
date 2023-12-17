@@ -2,6 +2,8 @@ class User < ApplicationRecord
   authenticates_with_sorcery!
 
   has_many :api_keys
+  has_many :posts
+  has_many :themes
 
   validates :password, length: { minimum: 3 }, if: -> { new_record? || changes[:crypted_password] }
   validates :password, confirmation: true, if: -> { new_record? || changes[:crypted_password] }
@@ -15,5 +17,10 @@ class User < ApplicationRecord
     return api_keys.active.first if api_keys.active.exists?
 
     api_keys.create
+  end
+
+  def deactivate_api_key!
+    api_key = self.api_keys.active.first
+    api_key&.deactivate!
   end
 end
