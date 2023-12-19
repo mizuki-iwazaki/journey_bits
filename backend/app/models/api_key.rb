@@ -11,4 +11,8 @@ class ApiKey < ApplicationRecord
     self.access_token = SecureRandom.uuid
     self.expires_at = DEFAULT_EXPIRES_WEEK.after
   end
+
+  def deactivate!
+    update!(active: false)
+  end
 end

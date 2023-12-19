@@ -29,40 +29,42 @@ export default function Login() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-20">
-      <div className="mb-4">
-        <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-          Email:
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:online-none focus:shadow-outline"
-          id="email"
-          type="text"
-          placeholder="Email"
-          value={email}
-          onChange={handleEmailChange}
-        />
-      </div>
-      {/* Password input */}
-      <div className="mb-4">
-        <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
-          Password:
-        </label>
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          id="password"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-      </div>
-      {/* Submit button */}
-      <div className="flex justify-center">
-        <button className="mr-4 inline-flex text-white bg-custom-turquoise hover:bg-custom-hover-turquoise border-0 py-2 px-6 focus:outline-none rounded text-lg">
-          ログイン
-        </button>
-      </div>
-    </form>
+    <div className="form-container">
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-20">
+        <div className="mb-4">
+          <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+            Email:
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:online-none focus:shadow-outline"
+            id="email"
+            type="text"
+            placeholder="Email"
+            value={email}
+            onChange={handleEmailChange}
+          />
+        </div>
+        {/* Password input */}
+        <div className="mb-4">
+          <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
+            Password:
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="password"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+        </div>
+        {/* Submit button */}
+        <div className="flex justify-center">
+          <button className="mr-4 inline-flex text-white bg-custom-turquoise hover:bg-custom-hover-turquoise border-0 py-2 px-6 focus:outline-none rounded text-lg">
+            ログイン
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
