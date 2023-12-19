@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useContext } from 'react';
+import AuthContext from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  const { login } = useContext(AuthContext);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -18,15 +22,24 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // APIへログインのリクエスト
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/authentication`, { email, password });
-      console.log(response.data);
-      // ログイン成功時、post一覧へリダイレクト
-      navigate('/posts');
+      
+      const token = response.headers['accesstoken'];
+      if (token) {
+        login(token); // AuthContextのlogin関数を呼び出し
+        sessionStorage.setItem('accesstoken', token); // ここでセッションストレージに保存
+        navigate('/posts');
+      } else {
+        console.error('トークンがレスポンスに含まれていません。');
+      }
     } catch (error) {
-        console.error('ログインエラー',error);
+      console.error('ログインエラー', error);
+      if (error.response) {
+        console.error('詳細なエラー情報:', error.response); // この行を追加
+      }
+      // ここでユーザーにエラーメッセージを表示する
     }
-  }
+  };
 
   return (
     <div className="form-container">

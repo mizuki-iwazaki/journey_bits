@@ -1,7 +1,7 @@
 import React from 'react';
 /* import { Link } from 'react-router-dom'; 機能実装後にコメントイン */
 
-const Footer = () => {
+const Footer = React.memo(() => {
   return (
     <footer className="fixed bottom-0 left-0 right-0 bg-gray-900 text-white p-4">
       <div className="container max-w-full flex justify-between items-center">
@@ -24,6 +24,6 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
+});
 
 export default Footer;
