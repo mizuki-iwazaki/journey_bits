@@ -5,6 +5,8 @@ module Api::ExceptionHandler
     rescue_from StandardError, with: :render_500
     rescue_from ActiveRecord::RecordNotFound, with: :render_404
     rescue_from ActionController::ParameterMissing, with: :render_400
+    rescue_from ActiveRecord::RecordInvalid, with: :render_422
+    rescue_from Api::AuthorizationError, with: :render_403
   end
 
   private
@@ -13,8 +15,16 @@ module Api::ExceptionHandler
     render_error(400, 'Bad Request', exception&.message, *messages)
   end
 
+  def render_403(exception = nil, messages = nil)
+    render_error(403, 'Forbidden', exception&.message, *messages)
+  end
+
   def render_404(exception = nil, messages = nil)
     render_error(404, 'Record Not Found', exception&.message, *messages)
+  end
+
+  def render_422(exception = nil, messages = nil)
+    render_error(422, 'Unprocessable Entity', exception&.message, *messages)
   end
 
   def render_500(exception = nil, messages = nil)

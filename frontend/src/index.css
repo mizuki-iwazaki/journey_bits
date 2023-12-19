@@ -21,3 +21,29 @@ code {
   max-height: 80vh; /* ビューポートの高さの80%を最大高さとする */
   padding: 1rem; /* 内容物との間隔を設定 */
 }
+
+/* サイドメニューの基本スタイル */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: -100%; /* メニューを画面外に隠す */
+  width: 300px; /* メニューの幅 */
+  height: 100%;
+  background-color: #2d3748; /* サイドメニューの背景色 */
+  transition: right 0.3s; /* スムーズなアニメーションのための遷移効果 */
+}
+
+/* メニュー表示時のスタイル */
+.side-menu.active {
+  right: 0; /* メニューを画面内に表示する */
+}
+
+/* メインコンテンツのコンテナ */
+.main-content {
+  transition: transform 0.3s; /* スムーズなアニメーションのための遷移効果 */
+}
+
+/* メニュー表示時のメインコンテンツのスタイル */
+.main-content.menu-active {
+  transform: translateX(-300px); /* メニューの幅に合わせて左に移動 */
+}

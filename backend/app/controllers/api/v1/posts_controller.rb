@@ -5,8 +5,11 @@ module Api
       before_action :check_ownership, only: %i[update destroy]
 
       def index
-        @posts = Post.all
-        json_string = PostSerializer.new(@posts, { include: [:user] }).serialized_json
+        @posts = Post.includes(:user, :theme).all
+        options = {
+        include: [:user, :theme]
+        }
+        json_string = PostSerializer.new(@posts, options).serialized_json
         render json: json_string
       end
 
