@@ -10,6 +10,7 @@ import Footer from './components/shared/Footer';
 import './App.css';
 import PostsComponent from './components/posts/PostsComponent';
 import NewPostForm from './components/posts/NewPostForm';
+import EditPostComponent from './components/posts/EditPostComponent';
 
 function App() {
   return (
@@ -17,11 +18,12 @@ function App() {
       <div className="App">
         <Header />
         <Routes>
-          <Route exact path="/" element={<AppIntrosection />} />
+          <Route path="/" element={<AppIntrosection />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/posts" element={<PostsComponent />} />
           <Route path="/posts/create" element={< NewPostForm />} />
+          <Route path="/posts/:id/edit" element={<EditPostComponent />} />
         </Routes>
         <Footer />
       </div>

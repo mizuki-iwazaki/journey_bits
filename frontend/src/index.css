@@ -16,9 +16,18 @@ code {
 @tailwind components;
 @tailwind utilities;
 
+header {
+  position: fixed; /* 既に指定されている場合 */
+  z-index: 1000; /* 十分に大きな値を指定してコンテンツより前面に来るようにする */
+}
+
+.relative {
+  position: relative;
+  z-index: 0; /* 低い値を指定するか、この行を完全に削除 */
+}
+
 .form-container {
   overflow-y: auto; /* 縦スクロールバーを有効にする */
-  max-height: 80vh; /* ビューポートの高さの80%を最大高さとする */
   padding: 1rem; /* 内容物との間隔を設定 */
 }
 
@@ -46,4 +55,58 @@ code {
 /* メニュー表示時のメインコンテンツのスタイル */
 .main-content.menu-active {
   transform: translateX(-300px); /* メニューの幅に合わせて左に移動 */
+}
+
+/* 投稿一覧のgrid設定 */
+.grid-container {
+  display: grid;
+  gap: 16px; /* アイテム間のギャップを16pxに設定 */
+  padding: 16px; /* コンテナのパディングを16pxに設定 */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+@media (max-width: 639px) {
+  .grid-container {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+  .grid-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid-container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-container {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* 投稿 画像の設定 */
+.image-preview-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+}
+
+.image-preview-item {
+  flex: 0 0 auto;
+  max-width: 160px;
+  max-height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-preview-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
