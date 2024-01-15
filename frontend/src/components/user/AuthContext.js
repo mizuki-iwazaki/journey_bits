@@ -10,7 +10,7 @@ const AuthContext = createContext({
 });
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(() => sessionStorage.getItem('accesstoken'));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     if (storedToken) {
       setToken(storedToken);
     }
-  }, [token]);
+  }, []);
 
   const login = (newToken) => {
     setToken(newToken); // トークンの状態を更新
