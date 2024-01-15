@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import AuthContext from '../user/AuthContext';
+import CloseIcon from '@mui/icons-material/Close';
 
 const NewPostForm = () => {
+  const { token } = useContext(AuthContext);
   const [themes, setThemes] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState('');
   const [content, setContent] = useState('');
+  const [images, setImages] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
   const [status, setStatus] = useState('published')
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/api/v1/themes`)
@@ -17,32 +24,44 @@ const NewPostForm = () => {
       });
   }, []);
 
+  const handleImageChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    const newImages = [...images, ...selectedFiles]; // 既存の画像に新しい画像を追加
+    setImages(newImages);
+    
+    const newImagePreviews = selectedFiles.map(file => ({
+      url: URL.createObjectURL(file),
+      name: file.name
+    }));
+    setImagePreviews(prevPreviews => [...prevPreviews, ...newImagePreviews]); // 既存のプレビューに新しいプレビューを追加
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    const formData = new FormData();
+    formData.append('post[theme_id]', selectedTheme);
+    formData.append('post[content]', content);
+    formData.append('post[status]', status);
+    images.forEach((image) => {
+      formData.append('post[image_file][]', image);
+    });
 
-    const postData = {
-      post: {
-        theme_id: selectedTheme,
-        content: content,
-        status: status
-      }
-    };
-
-    const token = sessionStorage.getItem('accesstoken');
     if (token) {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
 
-    axios.post(`${process.env.REACT_APP_API_URL}/api/v1/posts`, postData, config)
-      .then(response => {
-        console.log(response.data);
-        setSelectedTheme('');
-        setContent('');
-      })
-      .catch(error => {
-        console.error('There was an error', error);
-      });
+      axios.post(`${process.env.REACT_APP_API_URL}/api/v1/posts`, formData, config)
+        .then(response => {
+          console.log(response.data);
+          setSelectedTheme('');
+          setContent('');
+          setImages([]);
+          navigate('/posts')
+        })
+        .catch(error => {
+          console.error('There was an error', error);
+        });
     }
   };
 
@@ -78,6 +97,21 @@ const NewPostForm = () => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
+        </div>
+        <input
+          type="file"
+          multiple // 複数のファイルを選択可能に
+          onChange={handleImageChange}
+        />
+        <div className="image-preview-container">
+          {imagePreviews.map((image, index) => (
+            <div key={`${image.name}-${index}`} className="mb-4 relative image-preview-item">
+              <img src={image.url} alt={`Preview ${index}`} className="w-full" />
+              <button onClick={(e) => handleImageChange(image.filename, e)} className="absolute top-0 right-0 bg-red-600 text-white rounded-full p-1">
+                <CloseIcon />
+              </button>
+            </div>
+          ))}
         </div>
         <div className="mb-4">
         <label htmlFor="status" className="block text-gray-700 text-sm font-bold mb-2 text-left">

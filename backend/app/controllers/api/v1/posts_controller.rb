@@ -14,26 +14,44 @@ module Api
       end
 
       def show
-        render :show
+        render json: PostSerializer.new(@post).serialized_json
       end
 
       def create
-        post = current_user.posts.new(post_params)
+        post = current_user.posts.new(post_params.except(:image_file))
 
         if post.save
-          json_string = PostSerializer.new(post).serialized_json
-          render json: json_string
+          process_images(post, params[:post][:image_file])
+          render json: PostSerializer.new(post).serialized_json
         else
           render_400(nil, post.errors.full_messages)
         end
       end
 
       def update
-        if @post.update(post_params)
-          json_string = PostSerializer.new(post).serialized_json
-          render json: json_string
+        ActiveRecord::Base.transaction do
+          if @post.update(post_params.except(:image_file, :remove_image_ids))
+
+            # 画像の削除
+            if params[:post][:remove_image_ids].present?
+              Image.where(id: params[:post][:remove_image_ids]).destroy_all
+            end
+
+            # 新しい画像の追加
+            if params[:post][:image_file].present?
+              params[:post][:image_file].each do |image_file|
+                @post.images.create!(image_file: image_file)
+              end
+            end
+          else
+            raise ActiveRecord::Rollback
+          end
+        end
+
+        if @post.errors.empty?
+          render json: PostSerializer.new(@post.reload).serialized_json
         else
-          render_400(nil, post.errors.full_messages)
+          render json: { errors: @post.errors.full_messages }, status: 400
         end
       end
 
@@ -43,21 +61,26 @@ module Api
       end
 
       private
-        # Use callbacks to share common setup or constraints between actions.
-        def set_post
-          @post = Post.find(params[:id])
-        end
 
-        # Only allow a list of trusted parameters through.
-        def post_params
-          params.require(:post).permit(:content, :theme_id, :status)
-        end
+      def set_post
+        @post = Post.find(params[:id])
+      end
 
-        def check_ownership
-          unless @post.user_id == current_user.id
-            render json: { error: 'You are not authorized to perform this action' }, status: :forbidden
-          end
+      def post_params
+        params.require(:post).permit(:content, :theme_id, :status, image_file: [], remove_image_ids: [])
+      end
+
+      def process_images(post, image_files)
+        image_files.each do |image_file|
+          post.images.create!(image_file: image_file)
+        end if image_files.present?
+      end
+
+      def check_ownership
+        unless @post.user_id == current_user.id
+          render json: { error: 'You are not authorized to perform this action' }, status: :forbidden
         end
+      end
     end
   end
 end
