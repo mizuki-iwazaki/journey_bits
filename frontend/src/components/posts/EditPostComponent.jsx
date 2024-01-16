@@ -35,10 +35,11 @@ const EditPostComponent = () => {
           };
           const postResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/posts/${id}`, config);
           const postData = postResponse.data.data;
-          setSelectedTheme(String(postData.attributes.theme_id));
+          const themeId = String(postData.relationships.theme.data.id);
+          setSelectedTheme(themeId);
           setContent(postData.attributes.content);
           setStatus(postData.attributes.status);
-  
+
           if (postData.attributes.image_urls) {
             const loadedImageUrls = postData.attributes.image_urls.map(image => ({
               id: image.id, // 画像のIDを追加
@@ -51,7 +52,7 @@ const EditPostComponent = () => {
         }
       }
     };
-  
+
     fetchThemes();
     fetchPostDetails();
   }, [id, token]);
