@@ -73,20 +73,45 @@ header {
 
 @media (min-width: 640px) and (max-width: 767px) {
   .grid-container {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
   .grid-container {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
   .grid-container {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+}
+
+.button-shared-style {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 1; 
+  border-radius: 0.25rem;
+  font-size: 0.875rem; /* 14pxのフォントサイズ */
+  font-weight: 600;
+  margin-right: 0.5rem; /* 右マージン8px */
+  margin-bottom: 0.5rem; /* 下マージン8px */
+  min-width: 50px; /* 最小幅をアイコンボタンと同じにする */
+  height: 38px; /* ボタンの高さを固定 */
+}
+
+/* アイコンボタンスタイル */
+.icon-button {
+  padding: 0.5rem; /* アイコンのためのパディングを設定 */
+  min-width: 50px; /* アイコンボタンにも同じ最小幅を設定する */
+  height: 38px; /* ボタンの高さを固定する */
+  vertical-align: middle;
 }
 
 /* 投稿 画像の設定 */

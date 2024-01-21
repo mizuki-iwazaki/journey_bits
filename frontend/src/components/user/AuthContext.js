@@ -11,6 +11,7 @@ const AuthContext = createContext({
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => sessionStorage.getItem('accesstoken'));
+  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,16 +20,24 @@ export const AuthProvider = ({ children }) => {
     if (storedToken) {
       setToken(storedToken);
     }
+    const storedUserId = sessionStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(storedUserId);
+    }
   }, []);
 
-  const login = (newToken) => {
+  const login = (newToken, newUserId) => {
     setToken(newToken); // トークンの状態を更新
-    sessionStorage.setItem('accesstoken', newToken); // トークンをセッションストレージに保存
+    setUserId(newUserId);
+    sessionStorage.setItem('accesstoken', newToken);
+    sessionStorage.setItem('userId', newUserId);
   };
 
   const logout = () => {
     setToken(null); // トークンの状態をnullに更新
+    setUserId(null);
     sessionStorage.removeItem('accesstoken'); // トークンをセッションストレージから削除
+    sessionStorage.removeItem('userId');
     axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/authentication`)
       .then(() => {
       navigate('/'); // ホーム画面に遷移
@@ -36,10 +45,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const contextValue = {
-    isLoggedIn: !!token, // !!を使ってtokenがnullかどうかをチェック
-    token, // tokenの値をそのまま使う
-    login, // login関数をそのまま使う
-    logout, // logout関数をそのまま使う
+    isLoggedIn: !!token,
+    token, 
+    userId,
+    login,
+    logout
   };
 
   return (

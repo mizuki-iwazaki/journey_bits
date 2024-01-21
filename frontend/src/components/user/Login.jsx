@@ -23,23 +23,23 @@ export default function Login() {
     e.preventDefault();
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/authentication`, { email, password });
-      
       const token = response.headers['accesstoken'];
-      if (token) {
-        login(token); // AuthContextのlogin関数を呼び出し
-        sessionStorage.setItem('accesstoken', token); // ここでセッションストレージに保存
+      const userId = response.data.data.id;
+      if (token && userId) {
+        login(token, userId);
         navigate('/posts');
       } else {
-        console.error('トークンがレスポンスに含まれていません。');
+        console.error('トークンまたはユーザーIDがレスポンスに含まれていません。');
       }
     } catch (error) {
       console.error('ログインエラー', error);
       if (error.response) {
-        console.error('詳細なエラー情報:', error.response); // この行を追加
+        console.error('詳細なエラー情報:', error.response);
       }
       // ここでユーザーにエラーメッセージを表示する
     }
   };
+
 
   return (
     <div className="form-container">
