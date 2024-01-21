@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_09_125134) do
+ActiveRecord::Schema[7.1].define(version: 2024_01_16_131857) do
   create_table "api_keys", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "access_token", null: false
@@ -27,6 +27,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_09_125134) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["post_id"], name: "index_images_on_post_id"
+  end
+
+  create_table "locations", force: :cascade do |t|
+    t.string "name"
+    t.float "latitude"
+    t.float "longitude"
+    t.string "address"
+    t.integer "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_locations_on_post_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -61,6 +72,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_09_125134) do
 
   add_foreign_key "api_keys", "users"
   add_foreign_key "images", "posts"
+  add_foreign_key "locations", "posts"
   add_foreign_key "posts", "themes"
   add_foreign_key "posts", "users"
   add_foreign_key "themes", "users"

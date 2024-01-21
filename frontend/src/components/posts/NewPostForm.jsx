@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from '../user/AuthContext';
+import LocationInput from './LocationInput';
 import CloseIcon from '@mui/icons-material/Close';
 
 const NewPostForm = () => {
@@ -13,6 +14,17 @@ const NewPostForm = () => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [status, setStatus] = useState('published')
   const navigate = useNavigate();
+  const [location, setLocation] = useState({
+    name: '',
+    latitude: '',
+    longitude: '',
+    address: ''
+  });
+
+  // handleLocationSelect 関数で位置情報の状態を更新
+  const handleLocationSelect = (name, latitude, longitude, address) => {
+    setLocation({ name, latitude, longitude, address });
+  };
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/api/v1/themes`)
@@ -42,6 +54,10 @@ const NewPostForm = () => {
     formData.append('post[theme_id]', selectedTheme);
     formData.append('post[content]', content);
     formData.append('post[status]', status);
+    formData.append('post[location_attributes][name]', location.name);
+    formData.append('post[location_attributes][latitude]', location.latitude);
+    formData.append('post[location_attributes][longitude]', location.longitude);
+    formData.append('post[location_attributes][address]', location.address);
     images.forEach((image) => {
       formData.append('post[image_file][]', image);
     });
@@ -87,9 +103,9 @@ const NewPostForm = () => {
           </select>
         </div>
         <div className="mb-4">
-        <label htmlFor="content" className="block text-gray-700 text-sm font-bold mb-2 text-left">
-          エピソード
-        </label>
+          <label htmlFor="content" className="block text-gray-700 text-sm font-bold mb-2 text-left">
+            エピソード
+          </label>
           <textarea
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="content"
@@ -98,11 +114,22 @@ const NewPostForm = () => {
             onChange={(e) => setContent(e.target.value)}
           />
         </div>
-        <input
-          type="file"
-          multiple // 複数のファイルを選択可能に
-          onChange={handleImageChange}
-        />
+        <div className="mb-4">
+          <LocationInput onLocationSelect={handleLocationSelect} />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="image-upload" className="block text-gray-700 text-sm font-bold mb-2 text-left">
+            画像を選択
+          </label>
+          <input
+            id="image-upload"
+            name="image-upload"
+            type="file"
+            multiple
+            onChange={handleImageChange}
+            className="form-input"
+          />
+        </div>
         <div className="image-preview-container">
           {imagePreviews.map((image, index) => (
             <div key={`${image.name}-${index}`} className="mb-4 relative image-preview-item">
