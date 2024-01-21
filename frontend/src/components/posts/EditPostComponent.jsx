@@ -35,8 +35,11 @@ const EditPostComponent = () => {
           };
           const postResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/posts/${id}`, config);
           const postData = postResponse.data.data;
-          const themeId = String(postData.relationships.theme.data.id);
-          setSelectedTheme(themeId);
+
+          // 以下の行は不要ですので削除
+          // const themeId = String(postData.relationships.theme.data.id);
+
+          setSelectedTheme(postData.relationships.theme.data.id);
           setContent(postData.attributes.content);
           setStatus(postData.attributes.status);
 
@@ -49,14 +52,16 @@ const EditPostComponent = () => {
           }
         } catch (error) {
           console.error('Error fetching the post details:', error);
+          if (error.response && error.response.status === 403) {
+            navigate('/posts');
+          }
         }
       }
     };
 
     fetchThemes();
     fetchPostDetails();
-  }, [id, token]);
-  
+  }, [id, token, navigate]);
 
     const handleImageChange = (event) => {
       const files = Array.from(event.target.files);
