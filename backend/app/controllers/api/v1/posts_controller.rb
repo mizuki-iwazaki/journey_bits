@@ -2,7 +2,7 @@ module Api
   module V1
     class PostsController < BaseController
       before_action :set_post, only: %i[show update destroy]
-      before_action :check_ownership, only: %i[update destroy]
+      before_action :check_ownership, only: %i[show update destroy]
 
       def index
         @posts = Post.includes(:user, :theme).all
@@ -67,7 +67,13 @@ module Api
       end
 
       def post_params
-        params.require(:post).permit(:content, :theme_id, :status, image_file: [], remove_image_ids: [])
+        params.require(:post).permit(
+          :content,
+          :theme_id,
+          { image_file: [], remove_image_ids: [] },
+          { location_attributes: [:name, :latitude, :longitude, :address] },
+          :status
+        )
       end
 
       def process_images(post, image_files)
