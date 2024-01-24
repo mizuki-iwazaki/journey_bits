@@ -7,7 +7,8 @@ module Api
       def index
         @posts = Post.includes(:user, :theme).all
         options = {
-        include: [:user, :theme]
+          include: [:user, :theme],
+          params: { current_user_id: current_user.id }
         }
         json_string = PostSerializer.new(@posts, options).serialized_json
         render json: json_string

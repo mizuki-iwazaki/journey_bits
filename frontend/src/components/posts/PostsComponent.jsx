@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react'; 
+import React, { useState, useEffect, useContext, useCallback } from 'react'; 
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import AuthContext from '../user/AuthContext';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import LikeButton from './LikesButton';
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -23,15 +23,16 @@ const PostsComponent = () => {
   const { token, userId: loggedInUserId } = useContext(AuthContext);
   const [currentImageIndices, setCurrentImageIndices] = useState({});
   const [expandedPosts, setExpandedPosts] = useState({});
+  const [likes, setLikes] = useState({}); 
   const handleToggleExpand = (postId) => {
     setExpandedPosts(prev => ({ ...prev, [postId]: !prev[postId] }));
   };
 
-  useEffect(() => {
+  const fetchPosts = useCallback(() => {
     if (token) {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
-    };
+      };
 
       axios.get(`${process.env.REACT_APP_API_URL}/api/v1/posts`, config)
       .then(response => {
@@ -52,8 +53,14 @@ const PostsComponent = () => {
           return acc;
         }, {});
         setCurrentImageIndices(initialIndices);
-        
-        // 応答データからposts配列を抽出する
+
+        const initialLikes = {};
+        response.data.data.forEach(post => {
+          initialLikes[post.id] = post.attributes.liked_by_user;
+        });
+        setLikes(initialLikes);
+
+        // 応答データからposts配列を抽出
         const postsData = response.data.data.map(item => {
           const themeId = item.relationships.theme.data.id;
           const postUserId = item.relationships.user.data.id;
@@ -77,24 +84,29 @@ const PostsComponent = () => {
             location: location,
             imageUrls: imageUrls,
             status: item.attributes.status,
+            liked: initialLikes[item.id],
           };
         });
         setPosts(postsData);
-        })
-        .catch(error => {
-          console.error('Error fetching posts:', error);
-        });
+      })
+      .catch(error => {
+        console.error('Error fetching posts:', error);
+      });
     } else {
       console.log('トークンが取得できません。');
     }
-  }, [token]);
+  }, [token]); 
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   const deletePost = (postId) => {
     if (window.confirm('投稿を削除しますか？') && token) {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
-  
+
       axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}`, config)
         .then(() => {
           setPosts(posts.filter(post => post.id !== postId));
@@ -121,6 +133,42 @@ const PostsComponent = () => {
     }));
   };
 
+  const handleLike = (postId) => {
+    const currentLikeStatus = likes[postId];
+
+    const updateLikeStatus = (newLikeStatus) => {
+      setLikes(prevLikes => ({
+          ...prevLikes,
+          [postId]: newLikeStatus
+      }));
+  };
+
+    // サーバーとの通信後に状態を更新
+    if (currentLikeStatus) {
+      axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}/likes`, {
+          headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(response => {
+        console.log('Like removed', response);
+        updateLikeStatus(response.data.data.attributes.liked_by_user);
+      })
+      .catch(error => {
+        console.error('Error removing like:', error);
+      });
+    } else {
+      axios.post(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}/likes`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(response => {
+          console.log('Like added', response);
+          // 応答後にlikesの状態を更新
+          updateLikeStatus(response.data.data.attributes.liked_by_user);
+      })
+      .catch(error => {
+          console.error('Error adding like:', error);
+      });
+    }
+  };
 
   return (
     <div className="px-4 py-8">
@@ -174,8 +222,16 @@ const PostsComponent = () => {
                 </div>
                 <div className="flex justify-between items-center px-6 py-2">
                   <div className="flex items-center">
-                    <ThumbUpOffAltIcon />
-                    <BookmarkAddOutlinedIcon />
+                  {loggedInUserId !== post.userId && (
+                    <>
+                      <LikeButton
+                        postId={post.id}
+                        liked={likes[post.id]}
+                        onLike={handleLike}
+                      />
+                      <BookmarkAddOutlinedIcon />
+                    </>
+                  )}
                   </div>
                   <div className="flex items-center">
                     <Link to={`/posts/${post.id}`} className="button-shared-style bg-blue-500 text-white">

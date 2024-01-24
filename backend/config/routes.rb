@@ -6,6 +6,9 @@ Rails.application.routes.draw do
       resource :authentication, only: %i[create destroy]
       resources :themes, only: %i[index create destroy]
       resources :posts, only: %i[index show create update destroy]
+      resources :posts do
+        resource :likes, only: %i[create destroy]
+      end
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

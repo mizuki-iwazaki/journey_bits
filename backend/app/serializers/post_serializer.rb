@@ -23,6 +23,14 @@ class PostSerializer
     end
   end
 
+  attribute :liked_by_user do |post, params|
+    post.likes.exists?(user_id: params[:current_user_id])
+  end
+
+  attribute :likes_count do |post|
+    post.likes.count
+  end
+
   belongs_to :user
   belongs_to :theme
 end
