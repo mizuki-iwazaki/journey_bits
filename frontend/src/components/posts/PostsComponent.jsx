@@ -6,8 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LikeButton from './LikesButton';
 import BookmarkButton from './BookmarksButton';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ImageSlider from './ImageSlider';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 // 投稿を文字数で区切る
@@ -238,23 +237,13 @@ const PostsComponent = () => {
                     {post.imageUrls.length === 0 && (
                       <img src={`${process.env.REACT_APP_API_URL}/uploads/image/image_file/default.jpg`} alt="Default" />
                     )}
-                    {post.imageUrls.length === 1 && (
-                      <img src={post.imageUrls[0].url} alt={`Post ${post.id}`} />
-                    )}
-                    {post.imageUrls.length > 1 && (
-                      <>
-                        {currentImageIndices[post.id] > 0 && (
-                          <button onClick={() => handlePrevImage(post.id)} className="absolute left-0 top-1/2 transform -translate-y-1/2">
-                            <ArrowBackIosNewIcon />
-                          </button>
-                        )}
-                        <img src={post.imageUrls[currentImageIndices[post.id] || 0].url} alt={`Post ${post.id}`} />
-                        {currentImageIndices[post.id] < post.imageUrls.length - 1 && (
-                          <button onClick={() => handleNextImage(post.id)} className="absolute right-0 top-1/2 transform -translate-y-1/2">
-                            <ArrowForwardIosIcon />
-                          </button>
-                        )}
-                      </>
+                    {post.imageUrls.length > 0 && (
+                      <ImageSlider
+                        imageUrls={post.imageUrls}
+                        currentIndex={currentImageIndices[post.id] || 0}
+                        onNext={() => handleNextImage(post.id)}
+                        onPrev={() => handlePrevImage(post.id)}
+                      />
                     )}
                   </div>
                 </div>
