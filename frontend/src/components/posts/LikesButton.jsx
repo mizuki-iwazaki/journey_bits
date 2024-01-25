@@ -1,14 +1,14 @@
 import React from 'react';
-import ThumbUpOffAltSharpIcon from '@mui/icons-material/ThumbUpOffAltSharp';
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 
 const LikeButton = ({ postId, liked, onLike }) => {
   return (
     <button onClick={() => onLike(postId)}>
       {liked ? (
-        <ThumbUpOffAltSharpIcon className="text-blue-500" />
-      ) : (
-        <ThumbUpOffAltIcon className="text-gray-700" />
+        <ThumbUpAltIcon className="text-blue-500" />
+    ) : (
+        <ThumbUpAltOutlinedIcon className="text-gray-700" />
       )}
     </button>
   );

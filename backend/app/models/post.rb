@@ -3,6 +3,7 @@ class Post < ApplicationRecord
   belongs_to :theme
   has_many :images, dependent: :destroy
   has_many :likes
+  has_many :bookmarks
   has_one :location, dependent: :destroy
   accepts_nested_attributes_for :location
 

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       resources :posts, only: %i[index show create update destroy]
       resources :posts do
         resource :likes, only: %i[create destroy]
+        resource :bookmarks, only: %i[create destroy]
       end
     end
   end
