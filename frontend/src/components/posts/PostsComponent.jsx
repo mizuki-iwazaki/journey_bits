@@ -5,7 +5,7 @@ import AuthContext from '../user/AuthContext';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LikeButton from './LikesButton';
-import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined';
+import BookmarkButton from './BookmarksButton';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -24,6 +24,7 @@ const PostsComponent = () => {
   const [currentImageIndices, setCurrentImageIndices] = useState({});
   const [expandedPosts, setExpandedPosts] = useState({});
   const [likes, setLikes] = useState({}); 
+  const [bookmarks, setBookmarks] = useState({});
   const handleToggleExpand = (postId) => {
     setExpandedPosts(prev => ({ ...prev, [postId]: !prev[postId] }));
   };
@@ -60,6 +61,12 @@ const PostsComponent = () => {
         });
         setLikes(initialLikes);
 
+        const initialBookmarks ={};
+        response.data.data.forEach(post => {
+          initialBookmarks[post.id] = post.attributes.bookmarked_by_user;
+        });
+        setBookmarks(initialBookmarks);
+
         // 応答データからposts配列を抽出
         const postsData = response.data.data.map(item => {
           const themeId = item.relationships.theme.data.id;
@@ -85,6 +92,7 @@ const PostsComponent = () => {
             imageUrls: imageUrls,
             status: item.attributes.status,
             liked: initialLikes[item.id],
+            bookmarked: initialBookmarks[item.id],
           };
         });
         setPosts(postsData);
@@ -141,8 +149,7 @@ const PostsComponent = () => {
           ...prevLikes,
           [postId]: newLikeStatus
       }));
-  };
-
+    };
     // サーバーとの通信後に状態を更新
     if (currentLikeStatus) {
       axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}/likes`, {
@@ -169,6 +176,41 @@ const PostsComponent = () => {
       });
     }
   };
+
+  const handleBookmark = (postId) => {
+    const currentBookmarkStatus = bookmarks[postId];
+
+    const updateBookmarkStatus = (newBookmarkStatus) => {
+      setBookmarks(prevBookmarks => ({
+        ...prevBookmarks,
+        [postId]: newBookmarkStatus
+      }));
+    };
+  if (currentBookmarkStatus) {
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}/bookmarks`, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(response => {
+      console.log('Bookmark removed', response);
+      updateBookmarkStatus(response.data.data.attributes.bookmarked_by_user);
+    })
+    .catch(error => {
+      console.error('Error removing bookmark:', error);
+    });
+  } else {
+    axios.post(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}/bookmarks`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(response => {
+        console.log('Bookmark added', response);
+        // 応答後にbookmarkの状態を更新
+        updateBookmarkStatus(response.data.data.attributes.bookmarked_by_user);
+    })
+    .catch(error => {
+        console.error('Error adding bookmark:', error);
+    });
+  }
+};
 
   return (
     <div className="px-4 py-8">
@@ -221,17 +263,21 @@ const PostsComponent = () => {
                   <p className="text-gray-700">{post.location.name}</p>
                 </div>
                 <div className="flex justify-between items-center px-6 py-2">
-                  <div className="flex items-center">
-                  {loggedInUserId !== post.userId && (
-                    <>
-                      <LikeButton
-                        postId={post.id}
-                        liked={likes[post.id]}
-                        onLike={handleLike}
-                      />
-                      <BookmarkAddOutlinedIcon />
-                    </>
-                  )}
+                  <div className="grid grid-cols-2 gap-3 items-center">
+                    {loggedInUserId !== post.userId && (
+                      <>
+                        <LikeButton
+                          postId={post.id}
+                          liked={likes[post.id]}
+                          onLike={handleLike}
+                        />
+                        <BookmarkButton
+                          postId={post.id}
+                          bookmarked={bookmarks[post.id]}
+                          onBookmark={handleBookmark}
+                        />
+                      </>
+                    )}
                   </div>
                   <div className="flex items-center">
                     <Link to={`/posts/${post.id}`} className="button-shared-style bg-blue-500 text-white">
