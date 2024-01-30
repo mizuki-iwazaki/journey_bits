@@ -5,9 +5,20 @@ module Api
       before_action :check_ownership, only: %i[show update destroy]
 
       def index
-        @posts = Post.includes(:user, :theme).all
+        @posts = Post.all.includes(:user, :theme, :location).order(created_at: :desc)
+
+        # フリーワード検索
+        if params[:search].present?
+          search_terms = params[:search].split
+          search_query = search_terms.map { |term|
+            "(posts.content LIKE :term OR themes.name LIKE :term OR locations.name LIKE :term)"
+          }.join(' AND ')
+          @posts = @posts.joins(:theme, :location).where(search_query, term: search_terms.map { |term| "%#{term}%" })
+        end
+
+        # 応答の生成
         options = {
-          include: [:user, :theme],
+          include: [:user, :theme, :location],
           params: { current_user_id: current_user.id }
         }
         json_string = PostSerializer.new(@posts, options).serialized_json

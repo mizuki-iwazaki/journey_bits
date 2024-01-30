@@ -8,6 +8,7 @@ import LikeButton from './LikesButton';
 import BookmarkButton from './BookmarksButton';
 import ImageSlider from './ImageSlider';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import SearchForm from './SearchForm';
 
 // 投稿を文字数で区切る
 const truncateText = (text, maxLength) => {
@@ -28,58 +29,63 @@ const PostsComponent = () => {
     setExpandedPosts(prev => ({ ...prev, [postId]: !prev[postId] }));
   };
 
-  const fetchPosts = useCallback(() => {
+  const fetchPosts = useCallback((searchParams = {}) => {
     if (token) {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
+        params: {}
       };
+      // 検索条件の追加
+      if (searchParams.searchTerm) {
+        config.params['search'] = searchParams.searchTerm;
+      }
 
       axios.get(`${process.env.REACT_APP_API_URL}/api/v1/posts`, config)
-      .then(response => {
-        const themes = {};
-        const users = {};
-        if (response.data.included) {
-          response.data.included.forEach(item => {
-            if (item.type === 'theme') {
-              themes[item.id] = item.attributes.name;
-            }
-            if (item.type === 'user') {
-              users[item.id] = item.attributes.name;
-            }
+        .then(response => {
+          const themes = {};
+          const users = {};
+          if (response.data.included) {
+            response.data.included.forEach(item => {
+              if (item.type === 'theme') {
+                themes[item.id] = item.attributes.name;
+              }
+              if (item.type === 'user') {
+                users[item.id] = item.attributes.name;
+              }
+            });
+          }
+          const initialIndices = response.data.data.reduce((acc, item) => {
+            acc[item.id] = 0;
+            return acc;
+          }, {});
+          setCurrentImageIndices(initialIndices);
+
+          const initialLikes = {};
+          response.data.data.forEach(post => {
+            initialLikes[post.id] = post.attributes.liked_by_user;
           });
-        }
-        const initialIndices = response.data.data.reduce((acc, item) => {
-          acc[item.id] = 0;
-          return acc;
-        }, {});
-        setCurrentImageIndices(initialIndices);
+          setLikes(initialLikes);
 
-        const initialLikes = {};
-        response.data.data.forEach(post => {
-          initialLikes[post.id] = post.attributes.liked_by_user;
-        });
-        setLikes(initialLikes);
+          const initialBookmarks ={};
+          response.data.data.forEach(post => {
+            initialBookmarks[post.id] = post.attributes.bookmarked_by_user;
+          });
+          setBookmarks(initialBookmarks);
 
-        const initialBookmarks ={};
-        response.data.data.forEach(post => {
-          initialBookmarks[post.id] = post.attributes.bookmarked_by_user;
-        });
-        setBookmarks(initialBookmarks);
-
-        // 応答データからposts配列を抽出
-        const postsData = response.data.data.map(item => {
-          const themeId = item.relationships.theme.data.id;
-          const postUserId = item.relationships.user.data.id;
-          const location = item.attributes.location ? {
-            name: item.attributes.location.name,
-            latitude: item.attributes.location.latitude,
-            longitude: item.attributes.location.longitude,
-            address: item.attributes.location.address
-          } : null;
-          const imageUrls = item.attributes.image_urls ? item.attributes.image_urls.map(imageObj => ({
-            id: imageObj.id,
-            url: new URL(imageObj.url, process.env.REACT_APP_API_URL).href
-          })) : [];
+          // 応答データからposts配列を抽出
+          const postsData = response.data.data.map(item => {
+            const themeId = item.relationships.theme.data.id;
+            const postUserId = item.relationships.user.data.id;
+            const location = item.attributes.location ? {
+              name: item.attributes.location.name,
+              latitude: item.attributes.location.latitude,
+              longitude: item.attributes.location.longitude,
+              address: item.attributes.location.address
+            } : null;
+            const imageUrls = item.attributes.image_urls ? item.attributes.image_urls.map(imageObj => ({
+              id: imageObj.id,
+              url: new URL(imageObj.url, process.env.REACT_APP_API_URL).href
+            })) : [];
 
           return {
             id: item.id,
@@ -93,16 +99,16 @@ const PostsComponent = () => {
             liked: initialLikes[item.id],
             bookmarked: initialBookmarks[item.id],
           };
-        });
-        setPosts(postsData);
-      })
+          });
+          setPosts(postsData);
+        })
       .catch(error => {
         console.error('Error fetching posts:', error);
       });
     } else {
       console.log('トークンが取得できません。');
     }
-  }, [token]); 
+  }, [token]);
 
   useEffect(() => {
     fetchPosts();
@@ -214,6 +220,12 @@ const PostsComponent = () => {
   return (
     <div className="px-4 py-8">
       {/* 投稿一覧 */}
+      <div className="form-container mx-auto">
+        <div className="flex justify-center py-4">
+        {/* 検索フォーム */}
+        <SearchForm onSearch={fetchPosts} />
+        </div>
+      </div>
       <div className="form-container mx-auto px-4">
         <div className="grid-container">
           {posts.map(post => {
