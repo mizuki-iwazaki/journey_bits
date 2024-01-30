@@ -232,10 +232,6 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.1.0)
-    ransack (4.1.1)
-      activerecord (>= 6.1.5)
-      activesupport (>= 6.1.5)
-      i18n
     rdoc (6.6.0)
       psych (>= 4.0.0)
     regexp_parser (2.8.2)
@@ -305,7 +301,6 @@ DEPENDENCIES
   puma (>= 5.0)
   rack-cors
   rails (~> 7.1.1)
-  ransack
   rubocop
   rubocop-rails
   sorcery
