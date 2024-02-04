@@ -1,5 +1,5 @@
 import React from 'react';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 
 const SideMenu = ({ isOpen, toggleMenu, logout }) => {
@@ -14,7 +14,9 @@ const SideMenu = ({ isOpen, toggleMenu, logout }) => {
       <ul className="pt-10">
         <li className="p-2">マイページ</li>
         <li className="p-2">ブックマーク一覧</li>
-        <li className="p-2">マッピング</li>
+        <li className="p-2">
+          <Link to={`/maps`}>Mapピン機能</Link>
+          </li>
         <li className="p-2">アルバム</li>
         <li className="p-2">
           <button onClick={logout}>ログアウト</button>

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import AuthContext from '../user/AuthContext';
 import CloseIcon from '@mui/icons-material/Close';
+import LocationInput from './LocationInput';
 
 const EditPostComponent = () => {
   const { id } = useParams();
@@ -12,6 +13,7 @@ const EditPostComponent = () => {
   const [themes, setThemes] = useState([]);
   const [selectedTheme, setSelectedTheme] = useState('');
   const [content, setContent] = useState('');
+  const [location, setLocation] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [removeImages, setRemoveImages] = useState([]);
@@ -35,14 +37,15 @@ const EditPostComponent = () => {
           };
           const postResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/posts/${id}`, config);
           const postData = postResponse.data.data;
-
-          // 以下の行は不要ですので削除
-          // const themeId = String(postData.relationships.theme.data.id);
-
           setSelectedTheme(postData.relationships.theme.data.id);
           setContent(postData.attributes.content);
           setStatus(postData.attributes.status);
-
+          setLocation({
+            name: postData.attributes.location.name,
+            lat: postData.attributes.location.latitude,
+            lng: postData.attributes.location.longitude,
+            address: postData.attributes.location.address
+          });
           if (postData.attributes.image_urls) {
             const loadedImageUrls = postData.attributes.image_urls.map(image => ({
               id: image.id, // 画像のIDを追加
@@ -79,12 +82,20 @@ const EditPostComponent = () => {
       setImageUrls(prev => prev.filter(image => image.id !== imageId)); // IDを使用してフィルタリング
     };
 
+    const handleLocationSelect = (name, latitude, longitude, address) => {
+      setLocation({ name, latitude, longitude, address });
+    };
+
     const handleSubmit = (event) => {
       event.preventDefault();
       const formData = new FormData();
       formData.append('post[theme_id]', selectedTheme);
       formData.append('post[content]', content);
       formData.append('post[status]', status);
+      formData.append('post[location_attributes][name]', location.name);
+      formData.append('post[location_attributes][latitude]', location.latitude);
+      formData.append('post[location_attributes][longitude]', location.longitude);
+      formData.append('post[location_attributes][address]', location.address);
 
       newImages.forEach((file) => {
         formData.append('post[image_file][]', file);
@@ -142,6 +153,16 @@ const EditPostComponent = () => {
                 onChange={(e) => setContent(e.target.value)}
             />
           </div>
+          <LocationInput
+            onLocationSelect={handleLocationSelect}
+            initialValue={{
+              name: location.name,
+              latitude: location.latitude,
+              longitude: location.longitude,
+              address: location.address
+            }}
+          />
+
           <label htmlFor="images" className="block text-gray-700 text-sm font-bold mb-2 text-left">
             画像を追加
           </label>
