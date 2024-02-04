@@ -4,7 +4,7 @@
   flex-direction: column; /* 子要素を縦方向に並べる */
   min-height: 100vh; /* ビューポートの高さを最小値とする */
   padding-top: 10px; /* ヘッダーの高さ分の上パディングを追加 */
-  padding-bottom: 60px; /* フッターの高さ分の下パディングを追加 */
+  padding-bottom: 50px;
 }
 
 .App-logo {
