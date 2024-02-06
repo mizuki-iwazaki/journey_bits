@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api';
+import { GoogleMap, Marker } from '@react-google-maps/api';
 import AuthContext from '../user/AuthContext';
 import ImageSlider from '../posts/ImageSlider';
+import CloseIcon from '@mui/icons-material/Close';
 
 const MapWithPins = () => {
   const { token } = useContext(AuthContext);
@@ -101,32 +102,27 @@ const MapWithPins = () => {
         ))}
 
         {selectedPost && (
-          <InfoWindow
-            position={{
-              lat: selectedPost.attributes.location.latitude,
-              lng: selectedPost.attributes.location.longitude
-            }}
-            onCloseClick={() => setSelectedPost(null)}
-          >
-          <div className="relative">
-            <div className="w-full max-w-lg p-4">
-              <div style={{ fontSize: '12px', fontWeight: 'bold', textAlign: 'left' }}>
-                テーマ： {selectedPost.attributes.theme}
+          <>
+            {/* オーバーレイの背景 */}
+            <div className="overlay" onClick={() => setSelectedPost(null)} />
+
+            {/* モーダルウィンドウ */}
+            <div className="modal">
+              <div className="modal-content">
+                <h3 className="text-left text-lg font-bold">{selectedPost.attributes.theme}</h3>
+                <p className="text-left text-xm">{selectedPost.attributes.content}</p>
+                {selectedPost.attributes.image_urls.length > 0 && (
+                  <ImageSlider
+                    imageUrls={selectedPost.attributes.image_urls}
+                    currentIndex={currentImageIndices[selectedPost.id] || 0}
+                    onNext={() => handleNextImage(selectedPost.id)}
+                    onPrev={() => handlePrevImage(selectedPost.id)}
+                  />
+                )}
+                <button onClick={() => setSelectedPost(null)} className="close-button"><CloseIcon /></button>
               </div>
-              <div style={{ fontSize: '10px', textAlign: 'left' }}>
-                {selectedPost.attributes.content}
-              </div>
-              {selectedPost.attributes.image_urls.length > 0 && (
-                <ImageSlider
-                  imageUrls={selectedPost.attributes.image_urls}
-                  currentIndex={currentImageIndices[selectedPost.id] || 0}
-                  onNext={() => handleNextImage(selectedPost.id)}
-                  onPrev={() => handlePrevImage(selectedPost.id)}
-                />
-              )}
             </div>
-          </div>
-          </InfoWindow>
+          </>
         )}
       </GoogleMap>
     </div>
