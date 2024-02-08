@@ -61,7 +61,7 @@ const MapWithPins = () => {
               },
             }));
             setPosts(postsWithFullImageUrls);
-            
+
             // 画像インデックスの初期化
             const initialIndices = postsWithFullImageUrls.reduce((acc, post) => {
               acc[post.id] = 0;
@@ -103,23 +103,23 @@ const MapWithPins = () => {
 
         {selectedPost && (
           <>
-            {/* オーバーレイの背景 */}
-            <div className="overlay" onClick={() => setSelectedPost(null)} />
+          {/* オーバーレイの背景 */}
+          <div className="overlay" onClick={() => setSelectedPost(null)} />
 
-            {/* モーダルウィンドウ */}
-            <div className="modal">
-              <div className="modal-content">
-                <h3 className="text-left text-lg font-bold">{selectedPost.attributes.theme}</h3>
-                <p className="text-left text-xm">{selectedPost.attributes.content}</p>
-                {selectedPost.attributes.image_urls.length > 0 && (
-                  <ImageSlider
-                    imageUrls={selectedPost.attributes.image_urls}
-                    currentIndex={currentImageIndices[selectedPost.id] || 0}
-                    onNext={() => handleNextImage(selectedPost.id)}
-                    onPrev={() => handlePrevImage(selectedPost.id)}
-                  />
-                )}
-                <button onClick={() => setSelectedPost(null)} className="close-button"><CloseIcon /></button>
+          {/* モーダルウィンドウ */}
+          <div className="modal">
+            <div className="modal-content">
+              <h3 className="text-left text-lg font-bold">テーマ：{selectedPost.attributes.theme}</h3>
+              <p className="text-left text-xm">{selectedPost.attributes.content}</p>
+              {selectedPost.attributes.image_urls.length > 0 && (
+                <ImageSlider
+                  imageUrls={selectedPost.attributes.image_urls}
+                  currentIndex={currentImageIndices[selectedPost.id] || 0}
+                  onNext={() => handleNextImage(selectedPost.id)}
+                  onPrev={() => handlePrevImage(selectedPost.id)}
+                />
+              )}
+              <button onClick={() => setSelectedPost(null)} className="close-button"><CloseIcon /></button>
               </div>
             </div>
           </>

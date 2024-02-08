@@ -17,7 +17,9 @@ const SideMenu = ({ isOpen, toggleMenu, logout }) => {
         <li className="p-2">
           <Link to={`/maps`}>Mapピン機能</Link>
           </li>
-        <li className="p-2">アルバム</li>
+        <li className="p-2">
+          <Link to={`/albums`}>アルバム</Link>
+        </li>
         <li className="p-2">
           <button onClick={logout}>ログアウト</button>
         </li>
