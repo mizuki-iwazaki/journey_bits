@@ -10,9 +10,10 @@ import Footer from './components/shared/Footer';
 import PostsComponent from './components/posts/PostsComponent';
 import NewPostForm from './components/posts/NewPostForm';
 import EditPostComponent from './components/posts/EditPostComponent';
-import MapPins from './components/maps/MapPins';
+import MapWithPins from './components/maps/MapWithPins';
 
 import './App.css';
+import ImageGallery from './components/posts/ImageGallery';
 
 const libraries = ['places'];
 
@@ -42,7 +43,8 @@ const App = () => {
           <Route path="/posts" element={<PostsComponent />} />
           <Route path="/posts/create" element={<NewPostForm />} />
           <Route path="/posts/:id/edit" element={<EditPostComponent />} />
-          <Route path="/maps" element={<MapPins />} />
+          <Route path="/albums" element={<ImageGallery />} />
+          <Route path="/maps" element={<MapWithPins />} />
         </Routes>
         <Footer />
       </div>

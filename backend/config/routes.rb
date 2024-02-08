@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         resource :bookmarks, only: %i[create destroy]
       end
       resources :maps, only: %i[index]
+      resources :albums, only: %i[index]
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
