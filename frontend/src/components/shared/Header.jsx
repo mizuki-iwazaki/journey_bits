@@ -1,16 +1,20 @@
 import React, {useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import AuthContext  from '../user/AuthContext';
 import SideMenu from './SideMenu';
 import MenuIcon from '@mui/icons-material/Menu';
+import BackButton from './backButton';
 
 const Header = React.memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isLoggedIn, logout } = useContext(AuthContext);
+  const location = useLocation();
 
   const toggleMenu  = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const showBackButton = location.pathname !== '/'; // ルートページではない場合にtrue
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-gray-900 text-white p-4">
@@ -21,6 +25,9 @@ const Header = React.memo(() => {
 
         {isLoggedIn && (
           <div className="grid grid-flow-col auto-cols-max gap-4 items-center">
+            {showBackButton && (
+              <BackButton /> // 条件に応じてBackボタンを表示
+            )}
             <Link to="/posts/create" className="text-xm">
               新規投稿
             </Link>
