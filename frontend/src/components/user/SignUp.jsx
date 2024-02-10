@@ -7,7 +7,12 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [avatar, setAvatar] = useState(null)
   const navigate = useNavigate();
+
+  const handleAvatarChange = (event) => {
+    setAvatar(event.target.files[0]);
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -15,84 +20,100 @@ export default function SignUp() {
     if (password !== passwordConfirmation) {
       alert('パスワードが一致していません')
     }
-    // フォームデータの取得
-    const userData = {
-      user: {
-        name: name,
-        email: email,
-        password: password,
-        password_confirmation: passwordConfirmation,
-      }
-    };
 
+    const formData = new FormData();
+    formData.append('user[name]', name);
+    formData.append('user[email]', email);
+    formData.append('user[password]', password);
+    formData.append('user[password_confirmation]', passwordConfirmation);
+    if (avatar) {
+      formData.append('user[avatar]', avatar);
+    }
 
-  // APIリクエスト
-  axios.post(`${process.env.REACT_APP_API_URL}/api/v1/registration`, userData)
-  .then(response => {
-    // 成功時の処理
-    console.log(response.data);
-    navigate('/login');
-  })
-  .catch(error => {
-    // エラー処理
-    console.error('エラーが発生しました!', error);
-  });
-};
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/registration`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log(response.data);
+      navigate('/login');
+    } catch (error) {
+      console.error('エラーが発生しました!', error);
+    }
+  };
 
-  // フォームのUI
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-20">
-        <div className="mb-4">
+        <div className="mb-4 text-left">
           <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
-          Name:
+            名前:
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="name"
+            name="name"
             type="text"
             placeholder="Name"
             value={name}
             onChange={(event) => setUserName(event.target.value)}
+            autoComplete="name"
           />
         </div>
-        <div className="mb-4">
+        <div className="mb-4 text-left">
           <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-            Email:
+            Eメール:
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="email"
+            name="email"
             type="text"
             placeholder="Email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
+            autoComplete="email"
           />
         </div>
-        <div className="mb-4">
+        <div className="mb-4 text-left">
           <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
-            Password:
+            パスワード:
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="password"
+            name="password"
             type="password"
             placeholder="Password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
         </div>
-        <div className="mb-4">
+        <div className="mb-4 text-left">
           <label htmlFor="passwordConfirmation" className="block text-gray-700 text-sm font-bold mb-2">
-            Password Confirmation:
+            パスワード確認:
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="passwordConfirmation"
+            name="password"
             type="password"
             placeholder="Confirm Password"
             value={passwordConfirmation}
             onChange={(event) => setPasswordConfirmation(event.target.value)}
+          />
+        </div>
+        <div className="mb-4 text-left">
+          <label htmlFor="avatar" className="block text-gray-700 text-sm font-bold mb-2">
+            アバター:
+          </label>
+          <input
+            className="w-full py-2 px-3 text-gray-700 leading-tight"
+            id="avatar"
+            name="avatar"
+            type="file"
+            onChange={handleAvatarChange}
           />
         </div>
         <div className="flex justify-center">
