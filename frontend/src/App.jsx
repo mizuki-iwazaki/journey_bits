@@ -10,6 +10,7 @@ import Footer from './components/shared/Footer';
 import PostsComponent from './components/posts/PostsComponent';
 import NewPostForm from './components/posts/NewPostForm';
 import EditPostComponent from './components/posts/EditPostComponent';
+import MyPage from './components/user/MyPage';
 import MapWithPins from './components/maps/MapWithPins';
 
 import './App.css';
@@ -43,6 +44,7 @@ const App = () => {
           <Route path="/posts" element={<PostsComponent />} />
           <Route path="/posts/create" element={<NewPostForm />} />
           <Route path="/posts/:id/edit" element={<EditPostComponent />} />
+          <Route path="/mypage" element={<MyPage />} />
           <Route path="/albums" element={<ImageGallery />} />
           <Route path="/maps" element={<MapWithPins />} />
         </Routes>
