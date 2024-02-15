@@ -72,6 +72,16 @@ module Api
         head :no_content
       end
 
+      def liked_posts
+        liked_posts = Post.joins(:likes).where(likes: { user_id: current_user.id })
+        render json: PostSerializer.new(liked_posts, { params: { current_user_id: current_user.id } }).serialized_json
+      end
+
+      def bookmarked_posts
+        bookmarked_posts = Post.joins(:bookmarks).where(bookmarks: { user_id: current_user.id })
+        render json: PostSerializer.new(bookmarked_posts, { params: { current_user_id: current_user.id } }).serialized_json
+      end
+
       private
 
       def set_post

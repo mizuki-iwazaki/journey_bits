@@ -35,6 +35,10 @@ class PostSerializer
     post.bookmarks.exists?(user_id: params[:current_user_id])
   end
 
+  attribute :bookmarks_count do |post|
+    post.likes.count
+  end
+
   belongs_to :user
   belongs_to :theme
   belongs_to :location
