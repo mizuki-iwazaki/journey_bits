@@ -97,6 +97,7 @@ const PostsComponent = () => {
             id: item.id,
             theme: themes[themeId],
             user: {
+              id: postUserId,
               ...users[postUserId],
               avatarUrl: avatarUrl,
             },
@@ -239,6 +240,8 @@ const PostsComponent = () => {
           {posts.map(post => {
             const { truncated, text } = truncateText(post.content, 50);
             const isExpanded = expandedPosts[post.id];
+            const isCurrentUser = loggedInUserId.toString() === post.user.id.toString();
+
 
             return (
               <div key={post.id} className="max-w-lg rounded overflow-hidden shadow-lg bg-white flex flex-col justify-between">
@@ -280,7 +283,7 @@ const PostsComponent = () => {
                 </div>
                 <div className="flex justify-between items-center px-6 py-2">
                   <div className="grid grid-cols-2 gap-3 items-center">
-                    {loggedInUserId !== post.userId && (
+                    {!isCurrentUser && (
                       <>
                         <LikeButton
                           postId={post.id}
@@ -296,10 +299,7 @@ const PostsComponent = () => {
                     )}
                   </div>
                   <div className="flex items-center">
-                    <Link to={`/posts/${post.id}`} className="button-shared-style bg-blue-500 text-white">
-                      詳細
-                    </Link>
-                    {loggedInUserId === post.userId && (
+                    {isCurrentUser && (
                       <>
                         <Link to={`/posts/${post.id}/edit`} className="button-shared-style icon-button bg-green-500 text-white">
                           <EditIcon />
