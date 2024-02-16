@@ -12,8 +12,12 @@ const SideMenu = ({ isOpen, toggleMenu, logout }) => {
       </button>
       {/* サイドメニューのリンクとアクション */}
       <ul className="pt-10">
-        <li className="p-2">マイページ</li>
-        <li className="p-2">ブックマーク一覧</li>
+        <li className="p-2">
+          <Link to={`/mypage`}>マイページ</Link>
+        </li>
+        <li className="p-2">
+          <Link to={`/posts`}>投稿一覧</Link>
+        </li>
         <li className="p-2">
           <Link to={`/maps`}>Mapピン機能</Link>
           </li>

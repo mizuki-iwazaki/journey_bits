@@ -1,7 +1,8 @@
 module Api
   module V1
     class RegistrationsController < BaseController
-      skip_before_action :authenticate
+      skip_before_action :authenticate, only: %i[create]
+
       def create
         @user = ::User.new(user_params)
 
@@ -15,10 +16,23 @@ module Api
         end
       end
 
+      def update
+        @user = current_user
+        if params[:user][:remove_avatar] == 'true'
+          @user.remove_avatar! if @user.avatar?
+        end
+
+        if @user.update(user_params.except(:remove_avatar))
+          render json: UserSerializer.new(@user).serialized_json
+        else
+          render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
       private
 
       def user_params
-        params.require(:user).permit(:name, :email, :password, :password_confirmation)
+        params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :remove_avatar)
       end
     end
   end
