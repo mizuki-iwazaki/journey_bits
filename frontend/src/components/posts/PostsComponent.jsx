@@ -164,7 +164,6 @@ const PostsComponent = () => {
           [postId]: newLikeStatus
       }));
     };
-    // サーバーとの通信後に状態を更新
     if (currentLikeStatus) {
       axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}/likes`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -240,8 +239,7 @@ const PostsComponent = () => {
           {posts.map(post => {
             const { truncated, text } = truncateText(post.content, 50);
             const isExpanded = expandedPosts[post.id];
-            const isCurrentUser = loggedInUserId.toString() === post.user.id.toString();
-
+            const isCurrentUser = loggedInUserId ? loggedInUserId.toString() === post.user.id.toString() : false;
 
             return (
               <div key={post.id} className="max-w-lg rounded overflow-hidden shadow-lg bg-white flex flex-col justify-between">
