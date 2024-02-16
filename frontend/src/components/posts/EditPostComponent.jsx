@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import AuthContext from '../user/AuthContext';
@@ -18,6 +18,7 @@ const EditPostComponent = () => {
   const [newImages, setNewImages] = useState([]);
   const [removeImages, setRemoveImages] = useState([]);
   const [status, setStatus] = useState('published');
+  const fileInputRef = useRef();
 
   useEffect(() => {
     const fetchThemes = async () => {
@@ -66,21 +67,32 @@ const EditPostComponent = () => {
     fetchPostDetails();
   }, [id, token, navigate]);
 
-    const handleImageChange = (event) => {
-      const files = Array.from(event.target.files);
-      setNewImages(files);
-      const newImageUrls = files.map(file => ({
-        url: URL.createObjectURL(file),
-        filename: file.name,
-      }));
-      setImageUrls(prevImageUrls => [...prevImageUrls, ...newImageUrls]);
-    };
+  const handleImageChange = (event) => {
+    const files = Array.from(event.target.files);
+    const newImageUrls = files.map(file => ({
+      url: URL.createObjectURL(file),
+      filename: file.name,
+      id: `temp-${Date.now()}-${file.name}`,
+    }));
+    setNewImages(prevNewImages => [...prevNewImages, ...files]);
+    setImageUrls(prevImageUrls => [...prevImageUrls, ...newImageUrls]);
+  };
 
-    const handleRemoveImage = (imageId, event) => {
-      event.preventDefault();
-      setRemoveImages(prev => [...prev, imageId]); // 画像のIDを追加
-      setImageUrls(prev => prev.filter(image => image.id !== imageId)); // IDを使用してフィルタリング
-    };
+  const handleRemoveImage = (imageId, event) => {
+    event.preventDefault();
+  
+    const imageIdStr = String(imageId);
+    if (imageIdStr.startsWith('temp-')) {
+      const filename = imageIdStr.split('-').slice(2).join('-');
+      setNewImages(prevNewImages => prevNewImages.filter(file => file.name !== filename));
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } else {
+      setRemoveImages(prev => [...prev, imageIdStr]);
+    }
+    setImageUrls(prev => prev.filter(image => image.id.toString() !== imageIdStr));
+  };
 
     const handleLocationSelect = (name, latitude, longitude, address) => {
       setLocation({ name, latitude, longitude, address });
@@ -100,7 +112,7 @@ const EditPostComponent = () => {
       newImages.forEach((file) => {
         formData.append('post[image_file][]', file);
       });
-    
+
       removeImages.forEach((imageId) => {
         formData.append('post[remove_image_ids][]', imageId);
       });
@@ -171,6 +183,7 @@ const EditPostComponent = () => {
             id="images"
             multiple
             onChange={handleImageChange}
+            ref={fileInputRef}
           />
           <div className="image-preview-container">
           {imageUrls && imageUrls.map((image, index) => (
