@@ -7,6 +7,8 @@ import SignUp from './components/user/SignUp';
 import Login from './components/user/Login';
 import AppIntrosection from './components/AppIntrosection';
 import Footer from './components/shared/Footer';
+import TermsOfService from './components/shared/TermsOfService';
+import PrivacyPolicy from './components/shared/PrivacyPolicy';
 import PostsComponent from './components/posts/PostsComponent';
 import NewPostForm from './components/posts/NewPostForm';
 import EditPostComponent from './components/posts/EditPostComponent';
@@ -47,6 +49,8 @@ const App = () => {
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/albums" element={<ImageGallery />} />
           <Route path="/maps" element={<MapWithPins />} />
+          <Route path="/legal/terms_of_service" element={<TermsOfService />} />
+          <Route path="/legal/privacy_policy" element={<PrivacyPolicy />} />
         </Routes>
         <Footer />
       </div>

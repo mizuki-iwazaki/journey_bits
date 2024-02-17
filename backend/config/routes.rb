@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   root 'toppages#home'
+  get '/legal/terms_of_service', to: 'legal_documents#terms_of_service'
+  get '/legal/privacy_policy', to: 'legal_documents#privacy_policy'
+
   namespace :api, format: 'json' do
     namespace :v1 do
       resource :registration, only: %i[create update]
