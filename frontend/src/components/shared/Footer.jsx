@@ -1,5 +1,6 @@
 import React from 'react';
-/* import { Link } from 'react-router-dom'; 機能実装後にコメントイン */
+import { Link } from 'react-router-dom';
+
 
 const Footer = React.memo(() => {
   return (
@@ -8,12 +9,11 @@ const Footer = React.memo(() => {
         <nav className="w-full">
           <ul className="flex justify-end items-center">
             <li className="ml-4">
-              {/* 作成後にリンクへ変更 */}
-              利用規約
+              <Link to="/legal/terms_of_service">利用規約</Link>
             </li>
             <li className="ml-4">
               {/* 作成後にリンクへ変更 */}
-              プライバシー<br />ポリシー
+              <Link to="/legal/privacy_policy">プライバシー<br />ポリシー</Link>
             </li>
             <li className="ml-4">
               {/* 作成後にリンクへ変更 */}
