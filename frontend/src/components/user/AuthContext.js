@@ -42,6 +42,7 @@ export const AuthProvider = ({ children }) => {
     setUserId(null);
     sessionStorage.removeItem('accesstoken'); // トークンをセッションストレージから削除
     sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('isAdmin', isAdmin.toString());
     axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/authentication`)
       .then(() => {
       navigate('/'); // ホーム画面に遷移
