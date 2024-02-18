@@ -9,6 +9,7 @@ import AppIntrosection from './components/AppIntrosection';
 import Footer from './components/shared/Footer';
 import TermsOfService from './components/shared/TermsOfService';
 import PrivacyPolicy from './components/shared/PrivacyPolicy';
+import InquiryForm from './components/shared/InquiryForm';
 import PostsComponent from './components/posts/PostsComponent';
 import NewPostForm from './components/posts/NewPostForm';
 import EditPostComponent from './components/posts/EditPostComponent';
@@ -17,6 +18,7 @@ import MapWithPins from './components/maps/MapWithPins';
 
 import './App.css';
 import ImageGallery from './components/posts/ImageGallery';
+import InquiryList from './components/shared/InquiryList';
 
 const libraries = ['places'];
 
@@ -51,6 +53,8 @@ const App = () => {
           <Route path="/maps" element={<MapWithPins />} />
           <Route path="/legal/terms_of_service" element={<TermsOfService />} />
           <Route path="/legal/privacy_policy" element={<PrivacyPolicy />} />
+          <Route path="/inquiry/create" element={<InquiryForm />} />
+          <Route path="/inquiries" element={<InquiryList/>} />
         </Routes>
         <Footer />
       </div>

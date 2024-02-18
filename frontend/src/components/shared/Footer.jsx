@@ -16,8 +16,7 @@ const Footer = React.memo(() => {
               <Link to="/legal/privacy_policy">プライバシー<br />ポリシー</Link>
             </li>
             <li className="ml-4">
-              {/* 作成後にリンクへ変更 */}
-              お問い合わせ
+              <Link to="/inquiry/create">お問い合わせ</Link>
             </li>
           </ul>
         </nav>
