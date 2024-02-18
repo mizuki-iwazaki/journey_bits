@@ -12,6 +12,7 @@ const AuthContext = createContext({
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => sessionStorage.getItem('accesstoken'));
   const [userId, setUserId] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(() => sessionStorage.getItem('isAdmin') === 'true');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,11 +27,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const login = (newToken, newUserId) => {
-    setToken(newToken); // トークンの状態を更新
+  const login = (newToken, newUserId, newRole) => {
+    const isAdmin = newRole === 'admin';
+    setToken(newToken);
     setUserId(newUserId);
+    setIsAdmin(isAdmin);
     sessionStorage.setItem('accesstoken', newToken);
     sessionStorage.setItem('userId', newUserId);
+    sessionStorage.setItem('isAdmin', isAdmin.toString());
   };
 
   const logout = () => {
@@ -38,6 +42,7 @@ export const AuthProvider = ({ children }) => {
     setUserId(null);
     sessionStorage.removeItem('accesstoken'); // トークンをセッションストレージから削除
     sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('isAdmin', isAdmin.toString());
     axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/authentication`)
       .then(() => {
       navigate('/'); // ホーム画面に遷移
@@ -48,6 +53,7 @@ export const AuthProvider = ({ children }) => {
     isLoggedIn: !!token,
     token, 
     userId,
+    isAdmin,
     login,
     logout
   };

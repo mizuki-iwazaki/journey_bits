@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 
-const SideMenu = ({ isOpen, toggleMenu, logout }) => {
+const SideMenu = ({ isOpen, toggleMenu, logout, isAdmin }) => {
   const menuClasses = `side-menu ${isOpen ? 'active' : ''}`;
   const handleCloseMenu = () => {
     toggleMenu();
@@ -30,6 +30,12 @@ const SideMenu = ({ isOpen, toggleMenu, logout }) => {
         <li className="p-2">
           <button onClick={() => { logout(); toggleMenu(); }}>ログアウト</button>
         </li>
+        {/* Adminメニュー */}
+        {isAdmin && (
+          <li className="p-2">
+            <Link to={`/inquiries`} onClick={handleCloseMenu}>問い合わせ一覧</Link>
+          </li>
+        )}
       </ul>
     </div>
   );

@@ -7,7 +7,7 @@ import BackButton from './backButton';
 
 const Header = React.memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isLoggedIn, logout } = useContext(AuthContext);
+  const { isLoggedIn, logout, isAdmin } = useContext(AuthContext);
   const location = useLocation();
 
   const toggleMenu  = () => {
@@ -26,7 +26,7 @@ const Header = React.memo(() => {
         {isLoggedIn && (
           <div className="grid grid-flow-col auto-cols-max gap-4 items-center">
             {showBackButton && (
-              <BackButton /> // 条件に応じてBackボタンを表示
+              <BackButton />
             )}
             <Link to="/posts/create" className="text-xm">
               新規投稿
@@ -34,7 +34,7 @@ const Header = React.memo(() => {
             <button onClick={toggleMenu} className="text-xl">
               <MenuIcon />
             </button>
-            <SideMenu isOpen={isMenuOpen} toggleMenu={toggleMenu} logout={logout} />
+            <SideMenu isOpen={isMenuOpen} toggleMenu={toggleMenu} logout={logout} isAdmin={isAdmin} />
           </div>
         )}
 

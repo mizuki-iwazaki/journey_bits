@@ -25,9 +25,11 @@ export default function Login() {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/authentication`, { email, password });
       const token = response.headers['accesstoken'];
       const userId = response.data.data.id;
+      const role = response.data.data.attributes.role;
       if (token && userId) {
-        login(token, userId);
+        login(token, userId, role);
         navigate('/posts');
+        
       } else {
         console.error('トークンまたはユーザーIDがレスポンスに含まれていません。');
       }
@@ -36,7 +38,6 @@ export default function Login() {
       if (error.response) {
         console.error('詳細なエラー情報:', error.response);
       }
-      // ここでユーザーにエラーメッセージを表示する
     }
   };
 

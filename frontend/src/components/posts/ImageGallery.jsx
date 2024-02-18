@@ -105,38 +105,46 @@ const ImageGallery = () => {
   }, [token]);
 
   return (
-    <div className="grid-container">
-      {imageUrls.map((image, index) => (
-        <div key={index} className="image-item" onClick={() => handleImageClick(image)}>
-          <img src={image.url} alt={`${index}`} />
-        </div>
-      ))}
+    <>
+      <div className="px-4 py-8">
+        <div className="form-container mx-auto">
+          <div className="flex justify-center py-4">
+            <div className="grid-container">
+              {imageUrls.map((image, index) => (
+                <div key={index} className="image-item" onClick={() => handleImageClick(image)}>
+                  <img src={image.url} alt={`${index}`} />
+                </div>
+              ))}
 
-{selectedPost && (
-        <>
-          <div className="overlay" onClick={handleCloseModal} />
-          <div className="modal">
-            <div className="modal-content">
-              <h3 className="text-left text-lg font-bold">テーマ：{selectedPost.attributes.themeName}</h3>
-              <p className="text-left text-xm">{selectedPost.attributes.content}</p>
-              {selectedPost.attributes.image_urls && selectedPost.attributes.image_urls.length > 0 && (
-                <ImageSlider
-                  imageUrls={selectedPost.attributes.image_urls}
-                  currentIndex={currentImageIndices[selectedPost.id] || 0}
-                  onNext={() => handleNextImage(selectedPost.id)}
-                  onPrev={() => handlePrevImage(selectedPost.id)}
-                />
+              {selectedPost && (
+                <>
+                  <div className="overlay" onClick={handleCloseModal} />
+                  <div className="modal">
+                    <div className="modal-content">
+                      <h3 className="text-left text-lg font-bold">テーマ：{selectedPost.attributes.themeName}</h3>
+                      <p className="text-left text-xm">{selectedPost.attributes.content}</p>
+                      {selectedPost.attributes.image_urls && selectedPost.attributes.image_urls.length > 0 && (
+                        <ImageSlider
+                          imageUrls={selectedPost.attributes.image_urls}
+                          currentIndex={currentImageIndices[selectedPost.id] || 0}
+                          onNext={() => handleNextImage(selectedPost.id)}
+                          onPrev={() => handlePrevImage(selectedPost.id)}
+                        />
+                      )}
+                      <p className="text-left text-xm">
+                        <LocationOnIcon />
+                        {selectedPost.attributes.locationName}
+                      </p>
+                      <button onClick={handleCloseModal} className="close-button"><CloseIcon /></button>
+                    </div>
+                  </div>
+                </>
               )}
-              <p className="text-left text-xm">
-                <LocationOnIcon />
-                {selectedPost.attributes.locationName}
-              </p>
-              <button onClick={handleCloseModal} className="close-button"><CloseIcon /></button>
             </div>
           </div>
-        </>
-      )}
-    </div>
+        </div>
+      </div>
+    </>
   );
 };
 

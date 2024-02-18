@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       resources :maps, only: %i[index]
       resources :albums, only: %i[index]
       resource :mypage, only: %i[show update]
+      resources :inquiries, only: %i[index create]
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
