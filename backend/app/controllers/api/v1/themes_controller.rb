@@ -23,7 +23,7 @@ module Api
       end
 
       def authorize_admin
-        raise Api::AuthorizationError, 'You are not authorized to perform this action' unless current_user.admin?
+        raise ActiveRecord::RecordNotFound, 'Not Found' unless current_user.admin?
       end
     end
 
