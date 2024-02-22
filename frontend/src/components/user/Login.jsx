@@ -22,14 +22,17 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/authentication`, { email, password });
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+  
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/authentication`, formData);
       const token = response.headers['accesstoken'];
       const userId = response.data.data.id;
       const role = response.data.data.attributes.role;
       if (token && userId) {
         login(token, userId, role);
         navigate('/posts');
-        
       } else {
         console.error('トークンまたはユーザーIDがレスポンスに含まれていません。');
       }
