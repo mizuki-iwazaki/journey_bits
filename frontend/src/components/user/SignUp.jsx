@@ -35,6 +35,7 @@ export default function SignUp() {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        withCredentials: true, 
       });
       console.log(response.data);
       navigate('/login');
