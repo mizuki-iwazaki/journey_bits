@@ -18,6 +18,9 @@ import MapWithPins from './components/maps/MapWithPins';
 
 import './App.css';
 import ImageGallery from './components/posts/ImageGallery';
+import ThemeList from './components/themes/ThemeList';
+import ThemeForm from './components/themes/ThemeForm';
+import EditTheme from './components/themes/EditTheme';
 import InquiryList from './components/shared/InquiryList';
 
 const libraries = ['places'];
@@ -53,6 +56,9 @@ const App = () => {
           <Route path="/maps" element={<MapWithPins />} />
           <Route path="/legal/terms_of_service" element={<TermsOfService />} />
           <Route path="/legal/privacy_policy" element={<PrivacyPolicy />} />
+          <Route path="themes" element={<ThemeList />} />
+          <Route path="/themes/:id/edit" element={<EditTheme />} />
+          <Route path="/theme/create" element={<ThemeForm />} />
           <Route path="/inquiry/create" element={<InquiryForm />} />
           <Route path="/inquiries" element={<InquiryList/>} />
         </Routes>

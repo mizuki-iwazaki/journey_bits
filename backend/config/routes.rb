@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resource :registration, only: %i[create update]
       resource :authentication, only: %i[create destroy]
-      resources :themes, only: %i[index create destroy]
+      resources :themes, only: %i[index show create update destroy]
       resources :posts, only: %i[index show create update destroy] do
         collection do
           get :liked_posts

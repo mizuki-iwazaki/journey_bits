@@ -32,9 +32,18 @@ const SideMenu = ({ isOpen, toggleMenu, logout, isAdmin }) => {
         </li>
         {/* Adminメニュー */}
         {isAdmin && (
-          <li className="p-2">
-            <Link to={`/inquiries`} onClick={handleCloseMenu}>問い合わせ一覧</Link>
-          </li>
+          <>
+            <li className="p-2">
+              <Link to={`/theme/create`} onClick={handleCloseMenu}>テーマ作成</Link>
+            </li>
+            <li className="p-2">
+              <Link to={`/themes`} onClick={handleCloseMenu}>テーマ一覧</Link>
+            </li>
+
+            <li className="p-2">
+              <Link to={`/inquiries`} onClick={handleCloseMenu}>問い合わせ一覧</Link>
+            </li>
+          </>
         )}
       </ul>
     </div>
