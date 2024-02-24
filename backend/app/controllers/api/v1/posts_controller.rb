@@ -5,7 +5,7 @@ module Api
       before_action :check_ownership, only: %i[show update destroy]
 
       def index
-        @posts = Post.all.includes(:user, :theme, :location).order(created_at: :desc)
+        @posts = Post.where(status: :published).includes(:user, :theme, :location).order(created_at: :desc)
 
         # フリーワード検索
         if params[:search].present?
