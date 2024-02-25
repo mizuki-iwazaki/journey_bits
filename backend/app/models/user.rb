@@ -28,4 +28,24 @@ class User < ApplicationRecord
     api_key = self.api_keys.active.first
     api_key&.deactivate!
   end
+
+  def security_answer=(answer)
+    self.security_answer_digest = BCrypt::Password.create(answer)
+  end
+
+  # 提供された回答が正しいか検証
+  def authenticate_security_question_and_answer(question, answer)
+    self.security_question == question && BCrypt::Password.new(self.security_answer_digest) == answer
+  end
+
+  def reset_password(new_password, new_password_confirmation)
+    self.password = new_password
+    self.password_confirmation = new_password_confirmation
+
+    if save
+      true
+    else
+      false
+    end
+  end
 end

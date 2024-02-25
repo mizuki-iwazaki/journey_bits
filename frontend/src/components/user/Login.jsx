@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useContext } from 'react';
 import AuthContext from './AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link,useNavigate, useLocation } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-
   const { login } = useContext(AuthContext);
-
+  const location = useLocation();
+  const { successMessage } = location.state || {};
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -25,7 +25,7 @@ export default function Login() {
       const formData = new FormData();
       formData.append('email', email);
       formData.append('password', password);
-  
+
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/authentication`, formData);
       const token = response.headers['accesstoken'];
       const userId = response.data.data.id;
@@ -44,37 +44,40 @@ export default function Login() {
     }
   };
 
-
   return (
     <div className="form-container">
+      {successMessage && <p className="text-green-500">{successMessage}</p>}
       <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-20">
-        <div className="mb-4">
+        <div className="mb-4 text-left">
           <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-            Email:
+            Email
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:online-none focus:shadow-outline"
             id="email"
             type="email"
-            placeholder="Email"
+            placeholder="メールアドレス"
             value={email}
             onChange={handleEmailChange}
             autoComplete="email"
           />
         </div>
         {/* Password input */}
-        <div className="mb-4">
+        <div className="mb-4 text-left">
           <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
-            Password:
+            Password
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="password"
             type="password"
-            placeholder="Password"
+            placeholder="パスワード"
             value={password}
             onChange={handlePasswordChange}
           />
+        </div>
+        <div className="pb-4">
+        <Link to='/password-reset-request' className="text-blue-500 hover:text-blue-700">パスワードをお忘れの方はこちら</Link>
         </div>
         {/* Submit button */}
         <div className="flex justify-center">

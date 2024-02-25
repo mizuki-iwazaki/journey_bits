@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { securityQuestions } from './SecurityQuestions';
 
 export default function SignUp() {
   const [name, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [selectedQuestion, setSelectedQuestion] = useState('');
+  const [securityAnswer, setSecurityAnswer] = useState('');
   const [avatar, setAvatar] = useState(null)
   const navigate = useNavigate();
 
@@ -26,6 +29,8 @@ export default function SignUp() {
     formData.append('user[email]', email);
     formData.append('user[password]', password);
     formData.append('user[password_confirmation]', passwordConfirmation);
+    formData.append('user[security_question]', selectedQuestion);
+    formData.append('user[security_answer]', securityAnswer);
     if (avatar) {
       formData.append('user[avatar]', avatar);
     }
@@ -49,17 +54,18 @@ export default function SignUp() {
       <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-20">
         <div className="mb-4 text-left">
           <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
-            名前:
+            ユーザー名:
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="name"
             name="name"
             type="text"
-            placeholder="Name"
+            placeholder="ユーザー名を入力してください"
             value={name}
             onChange={(event) => setUserName(event.target.value)}
             autoComplete="name"
+            required
           />
         </div>
         <div className="mb-4 text-left">
@@ -71,10 +77,11 @@ export default function SignUp() {
             id="email"
             name="email"
             type="text"
-            placeholder="Email"
+            placeholder="Emailを入力してください"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             autoComplete="email"
+            required
           />
         </div>
         <div className="mb-4 text-left">
@@ -86,8 +93,9 @@ export default function SignUp() {
             id="password"
             name="password"
             type="password"
-            placeholder="Password"
+            placeholder="パスワードを入力してください"
             value={password}
+            required
             onChange={(event) => setPassword(event.target.value)}
           />
         </div>
@@ -100,8 +108,9 @@ export default function SignUp() {
             id="passwordConfirmation"
             name="password"
             type="password"
-            placeholder="Confirm Password"
+            placeholder="同じパスワードを入力してください"
             value={passwordConfirmation}
+            required
             onChange={(event) => setPasswordConfirmation(event.target.value)}
           />
         </div>
@@ -117,6 +126,37 @@ export default function SignUp() {
             onChange={handleAvatarChange}
           />
         </div>
+        <div className="mb-4 text-left">
+          <label htmlFor="securityQuestion" className="block text-gray-700 text-sm font-bold mb-2">
+            秘密の質問:
+          </label>
+          <select
+            id="securityQuestion"
+            value={selectedQuestion}
+            onChange={(e) => setSelectedQuestion(e.target.value)}
+            required
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+          >
+            <option value="">質問を選択してください</option>
+            {securityQuestions.map(question => (
+              <option key={question.value} value={question.value}>{question.label}</option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4 text-left">
+          <label htmlFor="securityAnswer" className="block text-gray-700 text-sm font-bold mb-2">
+            回答:
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="securityAnswer"
+            type="text"
+            placeholder="回答を入力してください"
+            value={securityAnswer}
+            onChange={(event) => setSecurityAnswer(event.target.value)}
+            required
+          />
+        </div>        
         <div className="flex justify-center">
           <button className="mr-4 inline-flex text-white bg-custom-turquoise hover:bg-custom-hover-turquoise border-0 py-2 px-6 focus:outline-none rounded text-lg">
             新規登録
