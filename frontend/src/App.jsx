@@ -5,6 +5,8 @@ import { AuthProvider } from './components/user/AuthContext';
 import Header from './components/shared/Header';
 import SignUp from './components/user/SignUp';
 import Login from './components/user/Login';
+import PasswordResetRequest from './components/user/PasswrResetRequest';
+import PasswordReset from './components/user/PasswordReset';
 import AppIntrosection from './components/AppIntrosection';
 import Footer from './components/shared/Footer';
 import TermsOfService from './components/shared/TermsOfService';
@@ -48,6 +50,8 @@ const App = () => {
           <Route path="/" element={<AppIntrosection />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/password-reset-request" element={<PasswordResetRequest />} />
+          <Route path="/password-reset" element={<PasswordReset />} />
           <Route path="/posts" element={<PostsComponent />} />
           <Route path="/posts/create" element={<NewPostForm />} />
           <Route path="/posts/:id/edit" element={<EditPostComponent />} />

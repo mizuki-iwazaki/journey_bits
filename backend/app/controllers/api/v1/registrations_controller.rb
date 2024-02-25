@@ -32,7 +32,7 @@ module Api
       private
 
       def user_params
-        params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :remove_avatar)
+        params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :remove_avatar, :security_question, :security_answer)
       end
     end
   end

@@ -7,6 +7,12 @@ Rails.application.routes.draw do
     namespace :v1 do
       resource :registration, only: %i[create update]
       resource :authentication, only: %i[create destroy]
+      resources :password_resets, only: [] do
+        collection do
+          post 'validate'
+          post 'reset'
+        end
+      end
       resources :themes, only: %i[index show create update destroy]
       resources :posts, only: %i[index show create update destroy] do
         collection do
