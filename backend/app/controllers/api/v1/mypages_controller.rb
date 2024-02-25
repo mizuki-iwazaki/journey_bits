@@ -1,8 +1,9 @@
 module Api
   module V1
     class MypagesController < BaseController
+      before_action :check_guest_user, only: %i[show update]
       before_action :set_user, only: %i[show update]
-      before_action :user_params, only: %i[update]
+
       def show
         render json: UserSerializer.new(@user, include: [:posts, :themes, :locations]).serialized_json
       end

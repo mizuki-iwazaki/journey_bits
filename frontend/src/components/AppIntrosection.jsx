@@ -1,7 +1,10 @@
-import React from 'react';
-/* import { Link } from 'react-router-dom'; */
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import AuthContext from './user/AuthContext';
 
 const AppIntrosection = () => {
+  const { guestLogin } = useContext(AuthContext);
+
   return (
     <div className="form-container">
       <section className="text-black bg-white min-h-screen body-font">
@@ -17,9 +20,11 @@ const AppIntrosection = () => {
             <div className="flex justify-center">
               <button className="mr-4 inline-flex text-white bg-custom-turquoise hover:bg-custom-hover-turquoise border-0 py-2 px-6 focus:outline-none rounded text-lg">
                 {/* 会員登録ページへのリンク */}
-                今すぐ始める
+                <Link to="/signup">今すぐ始める</Link>
               </button>
-              <button className="mr-4 inline-flex text-white bg-custom-gray hover:bg-custom-hover-gray border-0 py-2 px-6 focus:outline-none rounded text-lg">
+              <button onClick={() => {
+                guestLogin();
+              }} className="mr-4 inline-flex text-white bg-custom-gray hover:bg-custom-hover-gray border-0 py-2 px-6 focus:outline-none rounded text-lg">
                 お試し
               </button>
             </div>

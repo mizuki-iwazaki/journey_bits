@@ -1,6 +1,7 @@
 module Api
   module V1
     class BookmarksController < BaseController
+      before_action :check_guest_user, only: %i[create destroy]
       before_action :set_post
 
       def create

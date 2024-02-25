@@ -23,6 +23,12 @@ module Api
         response.headers['AccessToken'] = api_key.access_token
       end
 
+      def check_guest_user
+        if current_user.guest?
+          render json: { error: 'Guest users are not allowed to perform this action' }, status: :forbidden
+        end
+      end
+
       private
 
       # https://github.com/NoamB/sorcery/issues/724

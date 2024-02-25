@@ -22,6 +22,7 @@ const truncateText = (text, maxLength) => {
 const PostsComponent = () => {
   const [posts, setPosts] = useState([]);
   const { token, userId: loggedInUserId } = useContext(AuthContext);
+  const { isGuest } = useContext(AuthContext);
   const [currentImageIndices, setCurrentImageIndices] = useState({});
   const [expandedPosts, setExpandedPosts] = useState({});
   const [likes, setLikes] = useState({}); 
@@ -156,6 +157,11 @@ const PostsComponent = () => {
   };
 
   const handleLike = (postId) => {
+    if (isGuest) {
+      alert('いいねを実行するにはログインが必要です。');
+      return;
+    }
+
     const currentLikeStatus = likes[postId];
 
     const updateLikeStatus = (newLikeStatus) => {
@@ -191,6 +197,11 @@ const PostsComponent = () => {
   };
 
   const handleBookmark = (postId) => {
+    if (isGuest) {
+      alert('ブックマークを実行するにはログインが必要です。');
+      return;
+    }
+
     const currentBookmarkStatus = bookmarks[postId];
 
     const updateBookmarkStatus = (newBookmarkStatus) => {

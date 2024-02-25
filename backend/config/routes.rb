@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   namespace :api, format: 'json' do
     namespace :v1 do
       resource :registration, only: %i[create update]
-      resource :authentication, only: %i[create destroy]
+      resource :authentication, only: %i[create destroy] do
+        collection do
+          post 'guest_login'
+        end
+      end
       resources :password_resets, only: [] do
         collection do
           post 'validate'
