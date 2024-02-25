@@ -2,8 +2,8 @@ module Api
   module V1
     class ThemesController < BaseController
       skip_before_action :authenticate, only: %i[index]
-      before_action :set_theme, only: %i[show update destroy]
       before_action :authorize_admin, only: %i[create update destroy]
+      before_action :set_theme, only: %i[show update destroy]
 
       def index
         @themes = Theme.all

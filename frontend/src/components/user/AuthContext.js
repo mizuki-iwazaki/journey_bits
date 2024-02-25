@@ -13,6 +13,8 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => sessionStorage.getItem('accesstoken'));
   const [userId, setUserId] = useState(null);
   const [isAdmin, setIsAdmin] = useState(() => sessionStorage.getItem('isAdmin') === 'true');
+  const [isGuest, setIsGuest] = useState(() => sessionStorage.getItem('isGuest') === 'true');
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,12 +31,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = (newToken, newUserId, newRole) => {
     const isAdmin = newRole === 'admin';
+    const isGuest = newRole === 'guest'
     setToken(newToken);
     setUserId(newUserId);
     setIsAdmin(isAdmin);
+    setIsGuest(isGuest);
     sessionStorage.setItem('accesstoken', newToken);
     sessionStorage.setItem('userId', newUserId);
     sessionStorage.setItem('isAdmin', isAdmin.toString());
+    sessionStorage.setItem('isGuest', isGuest.toString());
   };
 
   const logout = () => {
@@ -49,13 +54,27 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
+  const guestLogin = () => {
+    axios.post(`${process.env.REACT_APP_API_URL}/api/v1/authentication/guest_login`)
+    .then(response => {
+      const token = response.headers['accesstoken'];
+      login(token, userId, 'guest');
+      navigate('/posts');
+    })
+    .catch(error => {
+      console.error("ゲストログインに失敗しました:", error);
+    });
+  };
+
   const contextValue = {
     isLoggedIn: !!token,
     token, 
     userId,
     isAdmin,
+    isGuest,
     login,
-    logout
+    logout,
+    guestLogin,
   };
 
   return (

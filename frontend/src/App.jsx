@@ -24,6 +24,7 @@ import ThemeList from './components/themes/ThemeList';
 import ThemeForm from './components/themes/ThemeForm';
 import EditTheme from './components/themes/EditTheme';
 import InquiryList from './components/shared/InquiryList';
+import ProtectedRoute from './ProtectedRoute';
 
 const libraries = ['places'];
 
@@ -53,11 +54,11 @@ const App = () => {
           <Route path="/password-reset-request" element={<PasswordResetRequest />} />
           <Route path="/password-reset" element={<PasswordReset />} />
           <Route path="/posts" element={<PostsComponent />} />
-          <Route path="/posts/create" element={<NewPostForm />} />
+          <Route path="/posts/create" element={<ProtectedRoute><NewPostForm /></ProtectedRoute> } />
           <Route path="/posts/:id/edit" element={<EditPostComponent />} />
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/albums" element={<ImageGallery />} />
-          <Route path="/maps" element={<MapWithPins />} />
+          <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute> } />
+          <Route path="/albums" element={<ProtectedRoute><ImageGallery /></ProtectedRoute> } />
+          <Route path="/maps" element={<ProtectedRoute><MapWithPins /></ProtectedRoute> } />
           <Route path="/legal/terms_of_service" element={<TermsOfService />} />
           <Route path="/legal/privacy_policy" element={<PrivacyPolicy />} />
           <Route path="themes" element={<ThemeList />} />

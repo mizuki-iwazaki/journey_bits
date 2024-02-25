@@ -1,6 +1,7 @@
 module Api
   module V1
     class PasswordResetsController < BaseController
+      before_action :check_guest_user, only: %i[validate reset]
       skip_before_action :authenticate, only: %i[validate reset]
 
       def validate

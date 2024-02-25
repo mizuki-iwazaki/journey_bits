@@ -1,6 +1,7 @@
 module Api
   module V1
     class PostsController < BaseController
+      before_action :check_guest_user, only: %i[create update destroy]
       before_action :set_post, only: %i[show update destroy]
       before_action :check_ownership, only: %i[show update destroy]
 

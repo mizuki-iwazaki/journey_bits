@@ -1,6 +1,8 @@
 module Api
   module V1
     class AlbumsController < BaseController
+      before_action :check_guest_user, only: %i[index]
+
       def index
         posts_with_images = current_user.posts.includes(:user, :theme, :location)
 

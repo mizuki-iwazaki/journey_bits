@@ -7,7 +7,7 @@ import BackButton from './backButton';
 
 const Header = React.memo(() => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isLoggedIn, logout, isAdmin } = useContext(AuthContext);
+  const { isLoggedIn, logout, isAdmin, isGuest } = useContext(AuthContext);
   const location = useLocation();
 
   const toggleMenu  = () => {
@@ -23,7 +23,7 @@ const Header = React.memo(() => {
           Journey Bits
         </Link>
 
-        {isLoggedIn && (
+        {(isLoggedIn && !isGuest ) && (
           <div className="grid grid-flow-col auto-cols-max gap-4 items-center">
             {showBackButton && (
               <BackButton />
@@ -38,7 +38,7 @@ const Header = React.memo(() => {
           </div>
         )}
 
-        {!isLoggedIn && (
+        {(!isLoggedIn || isGuest) && (
           <nav>
           <ul className="flex">
             <li className="ml-4">
