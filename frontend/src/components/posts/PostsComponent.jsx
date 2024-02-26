@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react'; 
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import AuthContext from '../user/AuthContext';
 import EditIcon from '@mui/icons-material/Edit';
+import EditPostComponent from './EditPostComponent';
+import Modal from '../user/Modal';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LikeButton from './LikesButton';
 import BookmarkButton from './BookmarksButton';
@@ -30,6 +31,8 @@ const PostsComponent = () => {
   const handleToggleExpand = (postId) => {
     setExpandedPosts(prev => ({ ...prev, [postId]: !prev[postId] }));
   };
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingPostId, setEditingPostId] = useState(null);
 
   const fetchPosts = useCallback((searchParams = {}) => {
     if (token) {
@@ -124,6 +127,11 @@ const PostsComponent = () => {
     fetchPosts();
   }, [fetchPosts]);
 
+  const onUpdate = () => {
+    fetchPosts();
+    setIsEditing(false);
+  };
+
   const deletePost = (postId) => {
     if (window.confirm('投稿を削除しますか？') && token) {
       const config = {
@@ -198,7 +206,7 @@ const PostsComponent = () => {
 
   const handleBookmark = (postId) => {
     if (isGuest) {
-      alert('ブックマークを実行するにはログインが必要です。');
+      alert('を実行するにはログインが必要です。');
       return;
     }
 
@@ -310,9 +318,27 @@ const PostsComponent = () => {
                   <div className="flex items-center">
                     {isCurrentUser && (
                       <>
-                        <Link to={`/posts/${post.id}/edit`} className="button-shared-style icon-button bg-green-500 text-white">
+                        <button
+                          onClick={() => {
+                            setIsEditing(true);
+                            setEditingPostId(post.id);
+                            setIsEditing(true);
+                          }}
+                          className="button-shared-style icon-button bg-green-500 text-white"
+                        >
                           <EditIcon />
-                        </Link>
+                        </button>
+                        <Modal isOpen={isEditing && editingPostId === post.id} onClose={() => setIsEditing(false)}>
+                          <EditPostComponent
+                            id={post.id}
+                            redirectPath="/posts"
+                            onUpdate={onUpdate}
+                            onClose={() => {
+                              setIsEditing(false);
+                              setEditingPostId(null);
+                            }}
+                            />
+                        </Modal>
                         <button onClick={() => deletePost(post.id)} className="button-shared-style icon-button bg-red-500 text-white">
                           <DeleteIcon />
                         </button>

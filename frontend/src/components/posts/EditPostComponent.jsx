@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from '../user/AuthContext';
 import CloseIcon from '@mui/icons-material/Close';
 import LocationInput from './LocationInput';
 
-const EditPostComponent = () => {
-  const { id } = useParams();
+const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -14,6 +13,7 @@ const EditPostComponent = () => {
   const [selectedTheme, setSelectedTheme] = useState('');
   const [content, setContent] = useState('');
   const [location, setLocation] = useState([]);
+  const [initialLocation, setInitialLocation] = useState({});
   const [imageUrls, setImageUrls] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [removeImages, setRemoveImages] = useState([]);
@@ -41,12 +41,15 @@ const EditPostComponent = () => {
           setSelectedTheme(postData.relationships.theme.data.id);
           setContent(postData.attributes.content);
           setStatus(postData.attributes.status);
-          setLocation({
+          const locationData = {
             name: postData.attributes.location.name,
-            lat: postData.attributes.location.latitude,
-            lng: postData.attributes.location.longitude,
-            address: postData.attributes.location.address
-          });
+            latitude: postData.attributes.location.latitude,
+            longitude: postData.attributes.location.longitude,
+            address: postData.attributes.location.address,
+          };
+          setLocation(locationData);
+          setInitialLocation(locationData);
+
           if (postData.attributes.image_urls) {
             const loadedImageUrls = postData.attributes.image_urls.map(image => ({
               id: image.id, // 画像のIDを追加
@@ -57,7 +60,7 @@ const EditPostComponent = () => {
         } catch (error) {
           console.error('Error fetching the post details:', error);
           if (error.response && error.response.status === 403) {
-            navigate('/posts');
+            navigate(redirectPath);
           }
         }
       }
@@ -65,7 +68,7 @@ const EditPostComponent = () => {
 
     fetchThemes();
     fetchPostDetails();
-  }, [id, token, navigate]);
+  }, [id, token, navigate, redirectPath]);
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
@@ -104,9 +107,15 @@ const EditPostComponent = () => {
       formData.append('post[theme_id]', selectedTheme);
       formData.append('post[content]', content);
       formData.append('post[status]', status);
+
+      const locationChanged = initialLocation.name !== location.name ||
+      initialLocation.latitude !== location.latitude ||
+      initialLocation.longitude !== location.longitude ||
+      initialLocation.address !== location.address;
+
       formData.append('post[location_attributes][name]', location.name);
-      formData.append('post[location_attributes][latitude]', location.latitude);
-      formData.append('post[location_attributes][longitude]', location.longitude);
+      formData.append('post[location_attributes][latitude]', locationChanged ? location.latitude : initialLocation.latitude);
+      formData.append('post[location_attributes][longitude]', locationChanged ? location.longitude : initialLocation.longitude);
       formData.append('post[location_attributes][address]', location.address);
 
       newImages.forEach((file) => {
@@ -124,7 +133,9 @@ const EditPostComponent = () => {
         axios.put(`${process.env.REACT_APP_API_URL}/api/v1/posts/${id}`, formData, config)
           .then(response => {
             console.log('Updated successfully:', response.data);
-            navigate('/posts');
+            navigate(redirectPath);
+            onUpdate();
+            onClose();
           })
           .catch(error => {
             console.error('There was an error updating the post:', error);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import AuthContext from '../user/AuthContext';
+import AuthContext from './AuthContext';
 import PostCard from './PostCard';
 
 const LikedPosts = () => {
