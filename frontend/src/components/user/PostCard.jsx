@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined';
-import LikeButton from './LikesButton';
-import BookmarkButton from './BookmarksButton';
-import ImageSlider from './ImageSlider';
+import LikeButton from '../posts/LikesButton';
+import BookmarkButton from '../posts/BookmarksButton';
+import ImageSlider from '../posts/ImageSlider';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import EditIcon from '@mui/icons-material/Edit';
+import EditPostComponent from '../posts/EditPostComponent';
+import Modal from './Modal'; // Modal コンポーネントをインポート
+
 
 const truncateText = (text, maxLength) => {
   if (text.length > maxLength) {
@@ -14,8 +18,9 @@ const truncateText = (text, maxLength) => {
   return { truncated: false, text };
 };
 
-const PostCard = ({ post, onToggleExpand, onDeletePost, onNextImage, onPrevImage, isExpanded, currentImageIndex, loggedInUserId, onLike, onBookmark, liked, bookmarked, }) => {
+const PostCard = ({ post, onToggleExpand, onDeletePost, onNextImage, onPrevImage, isExpanded, currentImageIndex, loggedInUserId, onLike, onBookmark, liked, bookmarked, onUpdate, onClose }) => {
   const { truncated, text } = truncateText(post.content, 50);
+  const [isEditing, setIsEditing] = useState(false);
 
   return (
     <div className="max-w-lg rounded overflow-hidden shadow-lg bg-white flex flex-col justify-between">
@@ -48,8 +53,8 @@ const PostCard = ({ post, onToggleExpand, onDeletePost, onNextImage, onPrevImage
         <LocationOnIcon />
         <p className="text-gray-700">{post.location.name}</p>
       </div>
-      <div className="flex justify-between items-center px-6 py-2">
-        <div className="grid grid-cols-2 gap-3 items-center">
+      <div className="flex justify-between items-center px-4 py-2">
+        <div className="grid grid-cols-1 gap-2 items-center">
           <div className="relative">
             {loggedInUserId !== post.userId && (
               <>
@@ -78,6 +83,20 @@ const PostCard = ({ post, onToggleExpand, onDeletePost, onNextImage, onPrevImage
         <div className="flex items-center">
           {loggedInUserId === post.userId && (
             <>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="button-shared-style icon-button bg-green-500 text-white"
+              >
+                <EditIcon />
+              </button>
+              <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+                <EditPostComponent
+                  id={post.id}
+                  onUpdate={onUpdate}
+                  onClose={() => setIsEditing(false)}
+                  redirectPath="/mypage"
+                />
+              </Modal>
               <button onClick={() => onDeletePost(post.id)} className="button-shared-style icon-button bg-red-500 text-white">
                 <DeleteIcon />
               </button>

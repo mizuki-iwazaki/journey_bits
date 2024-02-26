@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from '../user/AuthContext';
 import CloseIcon from '@mui/icons-material/Close';
 import LocationInput from './LocationInput';
 
-const EditPostComponent = () => {
-  const { id } = useParams();
+const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -57,7 +56,7 @@ const EditPostComponent = () => {
         } catch (error) {
           console.error('Error fetching the post details:', error);
           if (error.response && error.response.status === 403) {
-            navigate('/posts');
+            navigate(redirectPath);
           }
         }
       }
@@ -65,7 +64,7 @@ const EditPostComponent = () => {
 
     fetchThemes();
     fetchPostDetails();
-  }, [id, token, navigate]);
+  }, [id, token, navigate, redirectPath]);
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
@@ -124,7 +123,9 @@ const EditPostComponent = () => {
         axios.put(`${process.env.REACT_APP_API_URL}/api/v1/posts/${id}`, formData, config)
           .then(response => {
             console.log('Updated successfully:', response.data);
-            navigate('/posts');
+            navigate(redirectPath);
+            onUpdate();
+            onClose();
           })
           .catch(error => {
             console.error('There was an error updating the post:', error);

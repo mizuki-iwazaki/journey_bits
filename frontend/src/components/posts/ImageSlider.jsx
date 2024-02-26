@@ -20,7 +20,7 @@ const ImageSlider = ({ imageUrls, currentIndex, onNext, onPrev }) => {
         </button>
       )}
       <img
-        src={imageUrls[currentIndex].url}
+        src={imageUrls[currentIndex]?.url}
         alt={`${currentIndex}`}
         className="w-full h-auto object-contain"
       />
