@@ -32,6 +32,7 @@ const PostsComponent = () => {
     setExpandedPosts(prev => ({ ...prev, [postId]: !prev[postId] }));
   };
   const [isEditing, setIsEditing] = useState(false);
+  const [editingPostId, setEditingPostId] = useState(null);
 
   const fetchPosts = useCallback((searchParams = {}) => {
     if (token) {
@@ -318,17 +319,24 @@ const PostsComponent = () => {
                     {isCurrentUser && (
                       <>
                         <button
-                          onClick={() => setIsEditing(true)}
+                          onClick={() => {
+                            setIsEditing(true);
+                            setEditingPostId(post.id);
+                            setIsEditing(true);
+                          }}
                           className="button-shared-style icon-button bg-green-500 text-white"
                         >
                           <EditIcon />
                         </button>
-                        <Modal isOpen={isEditing} onClose={() => setIsEditing(false)}>
+                        <Modal isOpen={isEditing && editingPostId === post.id} onClose={() => setIsEditing(false)}>
                           <EditPostComponent
                             id={post.id}
                             redirectPath="/posts"
                             onUpdate={onUpdate}
-                            onClose={() => setIsEditing(false)}
+                            onClose={() => {
+                              setIsEditing(false);
+                              setEditingPostId(null);
+                            }}
                             />
                         </Modal>
                         <button onClick={() => deletePost(post.id)} className="button-shared-style icon-button bg-red-500 text-white">

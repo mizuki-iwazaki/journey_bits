@@ -13,6 +13,7 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
   const [selectedTheme, setSelectedTheme] = useState('');
   const [content, setContent] = useState('');
   const [location, setLocation] = useState([]);
+  const [initialLocation, setInitialLocation] = useState({});
   const [imageUrls, setImageUrls] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [removeImages, setRemoveImages] = useState([]);
@@ -40,12 +41,15 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
           setSelectedTheme(postData.relationships.theme.data.id);
           setContent(postData.attributes.content);
           setStatus(postData.attributes.status);
-          setLocation({
+          const locationData = {
             name: postData.attributes.location.name,
-            lat: postData.attributes.location.latitude,
-            lng: postData.attributes.location.longitude,
-            address: postData.attributes.location.address
-          });
+            latitude: postData.attributes.location.latitude,
+            longitude: postData.attributes.location.longitude,
+            address: postData.attributes.location.address,
+          };
+          setLocation(locationData);
+          setInitialLocation(locationData);
+
           if (postData.attributes.image_urls) {
             const loadedImageUrls = postData.attributes.image_urls.map(image => ({
               id: image.id, // 画像のIDを追加
@@ -103,9 +107,15 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
       formData.append('post[theme_id]', selectedTheme);
       formData.append('post[content]', content);
       formData.append('post[status]', status);
+
+      const locationChanged = initialLocation.name !== location.name ||
+      initialLocation.latitude !== location.latitude ||
+      initialLocation.longitude !== location.longitude ||
+      initialLocation.address !== location.address;
+
       formData.append('post[location_attributes][name]', location.name);
-      formData.append('post[location_attributes][latitude]', location.latitude);
-      formData.append('post[location_attributes][longitude]', location.longitude);
+      formData.append('post[location_attributes][latitude]', locationChanged ? location.latitude : initialLocation.latitude);
+      formData.append('post[location_attributes][longitude]', locationChanged ? location.longitude : initialLocation.longitude);
       formData.append('post[location_attributes][address]', location.address);
 
       newImages.forEach((file) => {
