@@ -33,7 +33,7 @@ const usePageTracking = () => {
     // Google Analytics のページビュー追跡コード
     // 例えば、gtag.js を使用している場合
     const currentPage = location.pathname + location.search;
-    window.gtag('config', 'GA_TRACKING_ID', {
+    window.gtag('config', process.env.REACT_APP_GOOGLE_ANALYTICS_ID, {
       page_path: currentPage,
     });
   }, [location]);
