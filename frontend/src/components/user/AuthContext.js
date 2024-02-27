@@ -47,10 +47,17 @@ export const AuthProvider = ({ children }) => {
     setUserId(null);
     sessionStorage.removeItem('accesstoken'); // トークンをセッションストレージから削除
     sessionStorage.removeItem('userId');
-    sessionStorage.removeItem('isAdmin', isAdmin.toString());
-    axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/authentication`)
-      .then(() => {
+    sessionStorage.removeItem('isAdmin');
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/authentication`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(() => {
       navigate('/'); // ホーム画面に遷移
+    })
+    .catch(error => {
+      console.error("ログアウトに失敗しました:", error);
     });
   };
 
