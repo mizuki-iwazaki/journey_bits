@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { useJsApiLoader } from '@react-google-maps/api';
 import { AuthProvider } from './components/user/AuthContext';
 import Header from './components/shared/Header';
@@ -26,9 +26,23 @@ import EditTheme from './components/themes/EditTheme';
 import InquiryList from './components/shared/InquiryList';
 import ProtectedRoute from './ProtectedRoute';
 
+const usePageTracking = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Google Analytics のページビュー追跡コード
+    // 例えば、gtag.js を使用している場合
+    const currentPage = location.pathname + location.search;
+    window.gtag('config', 'GA_TRACKING_ID', {
+      page_path: currentPage,
+    });
+  }, [location]);
+};
+
 const libraries = ['places'];
 
 const App = () => {
+  usePageTracking();
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
