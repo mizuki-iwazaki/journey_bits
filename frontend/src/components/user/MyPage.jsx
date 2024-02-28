@@ -11,7 +11,6 @@ import LikedPost from './LikedPost';
 import BookmarkedPosts from './BookmarkedPost';
 
 const MyPage = () => {
-  const apiBaseUrl = process.env.REACT_APP_API_URL;
   const { token } = useContext(AuthContext);
   const [userData, setUserData] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -151,7 +150,7 @@ const MyPage = () => {
             <div style={{ marginTop: '10px', display: 'inline-block' }}>
               {userData.data.attributes.avatar ? (
                 <img
-                  src={`${apiBaseUrl}${userData.data.attributes.avatar}`}
+                  src={userData.data.attributes.avatar}
                   alt="User Avatar"
                   style={{
                     width: '100px',

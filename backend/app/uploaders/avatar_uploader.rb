@@ -2,16 +2,17 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
   include CarrierWave::MiniMagick
+  include Cloudinary::CarrierWave
 
   # Choose what kind of storage to use for this uploader:
-  storage :file
+  # storage :file
   # storage :fog
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
-  def store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
-  end
+  #  def store_dir
+  #   "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  #  end
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   # def default_url(*args)
@@ -30,20 +31,17 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   # Create different versions of your uploaded files:
   version :index_size do
-    process resize_and_pad: [900, 900, '#ffffff', 'Center']
-    process :convert_to_webp
+    process resize_and_pad: [600, 600, '#ffffff', 'Center']
   end
 
-  def convert_to_webp
-    manipulate! { |img| img.format('webp') }
-  end
+  #def convert_to_webp
+  #  manipulate! { |img| img.format('webp') }
+  #end
 
   def filename
-    return unless original_filename.present?
-
-    base_name = File.basename(original_filename, '.*')
-    "#{base_name}.webp"
+    original_filename if original_filename.present?
   end
+
 
   # Add an allowlist of extensions which are allowed to be uploaded.
   # For images you might use something like this:
