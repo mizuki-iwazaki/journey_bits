@@ -282,7 +282,7 @@ const PostsComponent = () => {
                   </p>
                   <div className="relative">
                     {post.imageUrls.length === 0 && (
-                      <img src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload/v1709134445/default.jpg`} alt="Default" />
+                      <img src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload/w_800,h_500,c_fill/v1709134445/default.jpeg`} alt="Default" />
                     )}
                     {post.imageUrls.length > 0 && (
                       <ImageSlider
