@@ -13,6 +13,6 @@ class ApiKey < ApplicationRecord
   end
 
   def deactivate!
-    update!(active: false)
+    update!(expires_at: Time.current)
   end
 end
