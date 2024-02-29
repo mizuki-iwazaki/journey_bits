@@ -13,7 +13,7 @@ const AppIntrosection = () => {
             <h1 className="title-font sm:text-2xl text-xs mb-4 font-medium text-left">
               Jouney Bitsで写真、場所、思い出を、1つのアプリケーションで管理しませんか？
             </h1>
-            <p className="mb-8 text-xl list-disc list-inside leading-relaxed text-left px-6">
+            <p className="mb-8 text-xl leading-relaxed text-left px-6">
               テーマに沿って記憶に残るエピソードを投稿・共有できます。<br />
               投稿ではエピソードのほか、関係する場所や画像も管理できます。<br />
               投稿する際に思い出を振り返ることで、より鮮明に記録・記憶していくことを補助するサービスです。<br />
