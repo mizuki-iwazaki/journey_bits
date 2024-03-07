@@ -128,7 +128,7 @@ export default function SignUp() {
         </div>
         <div className="mb-4 text-left">
           <label htmlFor="securityQuestion" className="block text-gray-700 text-sm font-bold mb-2">
-            秘密の質問:
+            秘密の質問(パスワードリセット時に使用します)
           </label>
           <select
             id="securityQuestion"
