@@ -90,16 +90,25 @@ const MapWithPins = () => {
         zoom={4.5}
         center={{ lat: 37.9121356, lng: 139.0613719 }} 
       >
-        {posts.map(post => (
-          <Marker
-            key={post.id}
-            position={{
-              lat: post.attributes.location.latitude,
-              lng: post.attributes.location.longitude
-            }}
-            onClick={() => onMarkerClick(post)}
-          />
-        ))}
+        {posts.map(post => {
+            const latitude = parseFloat(post.attributes.location.latitude);
+            const longitude = parseFloat(post.attributes.location.longitude);
+            const isValidLat = !isNaN(latitude);
+            const isValidLng = !isNaN(longitude);
+
+            return (
+              isValidLat && isValidLng && (
+                <Marker
+                  key={post.id}
+                  position={{
+                    lat: latitude,
+                    lng: longitude
+                  }}
+                  onClick={() => onMarkerClick(post)}
+                />
+              )
+            );
+          })}
 
         {selectedPost && (
           <>
