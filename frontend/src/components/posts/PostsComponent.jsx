@@ -44,6 +44,9 @@ const PostsComponent = () => {
       if (searchParams.searchTerm) {
         config.params['search'] = searchParams.searchTerm;
       }
+      if (searchParams.selectedTheme) {
+        config.params['theme_id'] = searchParams.selectedTheme;
+      }
 
       axios.get(`${process.env.REACT_APP_API_URL}/api/v1/posts`, config)
         .then(response => {
