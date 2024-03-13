@@ -83,23 +83,32 @@ const MapWithPins = () => {
   }
 
   return (
-    <div className="pt-12" style={{ height: 'calc(100vh - 3rem)', width: '100%' }}>
+    <div style={{ height: 'calc(100vh - 3rem)', width: '100%' }}>
       <GoogleMap
         id="example-map"
         mapContainerStyle={{ width: '100%', height: '100%' }}
         zoom={4.5}
         center={{ lat: 37.9121356, lng: 139.0613719 }} 
       >
-        {posts.map(post => (
-          <Marker
-            key={post.id}
-            position={{
-              lat: post.attributes.location.latitude,
-              lng: post.attributes.location.longitude
-            }}
-            onClick={() => onMarkerClick(post)}
-          />
-        ))}
+        {posts.map(post => {
+            const latitude = parseFloat(post.attributes.location.latitude);
+            const longitude = parseFloat(post.attributes.location.longitude);
+            const isValidLat = !isNaN(latitude);
+            const isValidLng = !isNaN(longitude);
+
+            return (
+              isValidLat && isValidLng && (
+                <Marker
+                  key={post.id}
+                  position={{
+                    lat: latitude,
+                    lng: longitude
+                  }}
+                  onClick={() => onMarkerClick(post)}
+                />
+              )
+            );
+          })}
 
         {selectedPost && (
           <>
