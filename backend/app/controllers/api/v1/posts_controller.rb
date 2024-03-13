@@ -6,13 +6,11 @@ module Api
       before_action :check_ownership, only: %i[show update destroy]
 
       def index
-        @posts = Post.where(status: :published).includes(:user, :theme, :location).order(created_at: :desc)
+        @posts = Post.where(status: :published).includes(:user, :theme, :location)
 
         # テーマ検索
         if params[:theme_id].present?
-          @posts = Post.joins(:theme).where(themes: {id: params[:theme_id]})
-        else
-          @posts = Post.all
+          @posts = @posts.joins(:theme).where(themes: {id: params[:theme_id]})
         end
 
         # ワード検索
@@ -23,6 +21,8 @@ module Api
           }.join(' AND ')
           @posts = @posts.joins(:theme, :location).where(search_query, term: search_terms.map { |term| "%#{term}%" })
         end
+
+        @posts = @posts.order(created_at: :desc)
 
         # 応答の生成
         options = {
