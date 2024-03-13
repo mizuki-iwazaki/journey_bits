@@ -19,7 +19,7 @@ module Api
         if params[:search].present?
           search_terms = params[:search].split
           search_query = search_terms.map { |term|
-            "(posts.content LIKE :term OR themes.name LIKE :term OR locations.name LIKE :term)"
+            "(posts.content LIKE :term OR locations.name LIKE :term)"
           }.join(' AND ')
           @posts = @posts.joins(:theme, :location).where(search_query, term: search_terms.map { |term| "%#{term}%" })
         end
