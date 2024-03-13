@@ -4,11 +4,30 @@ import AuthContext from './AuthContext';
 import EditIcon from '@mui/icons-material/Edit';
 import EditUserModal from './EditUserModal';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
+import { Tabs, Tab, Box } from '@mui/material';
 import PostCard from './PostCard';
 import LikedPost from './LikedPost';
 import BookmarkedPosts from './BookmarkedPost';
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
 
 const MyPage = () => {
   const { token } = useContext(AuthContext);
@@ -17,6 +36,10 @@ const MyPage = () => {
   const [posts, setPosts] = useState([]);
   const [expandedPosts, setExpandedPosts] = useState({});
   const [currentImageIndices, setCurrentImageIndices] = useState({});
+  const [tabValue, setTabValue] = useState(0);
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
 
   const fetchPosts = useCallback(() => {
     if (token) {
@@ -25,46 +48,45 @@ const MyPage = () => {
       };
       axios.get(`${process.env.REACT_APP_API_URL}/api/v1/mypage`, config)
         .then(response => {
-          setUserData(response.data);
+        setUserData(response.data);
 
-          const themes = response.data.included
-            .filter(item => item.type === 'theme')
-            .reduce((acc, theme) => ({ ...acc, [theme.id]: theme.attributes.name }), {});
-          const users = response.data.included
-            .filter(item => item.type === 'user')
-            .reduce((acc, user) => ({ ...acc, [user.id]: user.attributes.name }), {});
+        const themes = response.data.included
+          .filter(item => item.type === 'theme')
+          .reduce((acc, theme) => ({ ...acc, [theme.id]: theme.attributes.name }), {});
+        const users = response.data.included
+          .filter(item => item.type === 'user')
+          .reduce((acc, user) => ({ ...acc, [user.id]: user.attributes.name }), {});
 
-          const postsData = response.data.included
-            .filter(item => item.type === 'post')
-            .map(post => {
-              const themeId = post.relationships.theme.data.id;
-              const postUserId = post.relationships.user.data.id;
-              const location = post.attributes.location ? {
-                name: post.attributes.location.name,
-                latitude: post.attributes.location.latitude,
-                longitude: post.attributes.location.longitude,
-                address: post.attributes.location.address
-              } : null;
-              const imageUrls = post.attributes.image_urls ? post.attributes.image_urls.map(imageObj => ({
-                id: imageObj.id,
-                url: new URL(imageObj.url, process.env.REACT_APP_API_URL).href
-              })) : [];
+        const postsData = response.data.included
+          .filter(item => item.type === 'post')
+          .map(post => {
+            const themeId = post.relationships.theme.data.id;
+            const postUserId = post.relationships.user.data.id;
+            const location = post.attributes.location ? {
+              name: post.attributes.location.name,
+              latitude: post.attributes.location.latitude,
+              longitude: post.attributes.location.longitude,
+              address: post.attributes.location.address
+            } : null;
+            const imageUrls = post.attributes.image_urls ? post.attributes.image_urls.map(imageObj => ({
+              id: imageObj.id,
+              url: new URL(imageObj.url, process.env.REACT_APP_API_URL).href
+            })) : [];
 
-              return {
-                id: post.id,
-                theme: themes[themeId],
-                user: users[postUserId],
-                userId: postUserId,
-                content: post.attributes.content,
-                location,
-                imageUrls,
-                likes_count: post.attributes.likes_count,
-                bookmarks_count: post.attributes.bookmarks_count,
-              };
-            });
-          setPosts(postsData);
-        })
-        .catch(error => console.error("There was an error!", error));
+            return {
+              id: post.id,
+              theme: themes[themeId],
+              user: users[postUserId],
+              userId: postUserId,
+              content: post.attributes.content,
+              location,
+              imageUrls,
+              likes_count: post.attributes.likes_count,
+              bookmarks_count: post.attributes.bookmarks_count,
+            };
+          });
+        setPosts(postsData);
+      })
     }
   }, [token]);
 
@@ -94,7 +116,6 @@ const MyPage = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log('プロフィールを更新しました', response.data);
       setUserData(response.data);
       setEditModalOpen(false);
     } catch (error) {
@@ -115,8 +136,6 @@ const MyPage = () => {
         .catch(error => {
           console.error('Error delete post:', error);
         });
-    } else {
-      console.log('トークンが取得できません');
     }
   };
 
@@ -140,7 +159,7 @@ const MyPage = () => {
   };
 
   return (
-    <div className="py-14">
+    <div className="py-2">
       <div className="avatar-container" style={{ textAlign: 'center' }}>
         {userData ? (
           <>
@@ -176,13 +195,15 @@ const MyPage = () => {
           handleSave={handleSave}
         />
       </div>
-      <Tabs>
-        <TabList>
-          <Tab>過去の投稿</Tab>
-          <Tab>いいねリスト</Tab>
-          <Tab>ブックマークリスト</Tab>
-        </TabList>
-          <TabPanel>
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={tabValue} onChange={handleTabChange} aria-label="basic tabs example">
+            <Tab label="過去の投稿" />
+            <Tab label="いいねリスト" />
+            <Tab label="ブックマークリスト" />
+          </Tabs>
+        </Box>
+        <TabPanel value={tabValue} index={0}>
             <div className="form-container mx-auto">
               <div className="grid-container">
                 {posts.map((post) => (
@@ -207,13 +228,13 @@ const MyPage = () => {
               </div>
             </div>
           </TabPanel>
-          <TabPanel>
+          <TabPanel value={tabValue} index={1}>
             <LikedPost />
           </TabPanel>
-          <TabPanel>
+          <TabPanel value={tabValue} index={2}>
             <BookmarkedPosts />
           </TabPanel>
-      </Tabs>
+      </Box>
     </div>
   );
 };

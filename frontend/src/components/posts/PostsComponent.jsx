@@ -245,7 +245,7 @@ const PostsComponent = () => {
 };
 
   return (
-    <div className="px-4 py-8">
+    <div className="px-4">
       {/* 投稿一覧 */}
       <div className="form-container mx-auto">
         <div className="flex justify-center py-4">

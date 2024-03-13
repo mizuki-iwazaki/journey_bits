@@ -83,7 +83,7 @@ const MapWithPins = () => {
   }
 
   return (
-    <div className="pt-12" style={{ height: 'calc(100vh - 3rem)', width: '100%' }}>
+    <div style={{ height: 'calc(100vh - 3rem)', width: '100%' }}>
       <GoogleMap
         id="example-map"
         mapContainerStyle={{ width: '100%', height: '100%' }}

@@ -12,7 +12,7 @@ import Footer from './components/shared/Footer';
 import TermsOfService from './components/shared/TermsOfService';
 import PrivacyPolicy from './components/shared/PrivacyPolicy';
 import InquiryForm from './components/shared/InquiryForm';
-import PostsComponent from './components/posts/PostsComponent';
+import MainTabs from './components/MainTabs';
 import NewPostForm from './components/posts/NewPostForm';
 import EditPostComponent from './components/posts/EditPostComponent';
 import MyPage from './components/user/MyPage';
@@ -31,7 +31,6 @@ const usePageTracking = () => {
 
   useEffect(() => {
     // Google Analytics のページビュー追跡コード
-    // 例えば、gtag.js を使用している場合
     const currentPage = location.pathname + location.search;
     window.gtag('config', process.env.REACT_APP_GOOGLE_ANALYTICS_ID, {
       page_path: currentPage,
@@ -67,7 +66,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/password-reset-request" element={<PasswordResetRequest />} />
           <Route path="/password-reset" element={<PasswordReset />} />
-          <Route path="/posts" element={<PostsComponent />} />
+          <Route path="/posts" element={<MainTabs />} />
           <Route path="/posts/create" element={<ProtectedRoute><NewPostForm /></ProtectedRoute> } />
           <Route path="/posts/:id/edit" element={<EditPostComponent />} />
           <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute> } />
