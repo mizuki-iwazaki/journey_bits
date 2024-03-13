@@ -8,7 +8,14 @@ module Api
       def index
         @posts = Post.where(status: :published).includes(:user, :theme, :location).order(created_at: :desc)
 
-        # フリーワード検索
+        # テーマ検索
+        if params[:theme_id].present?
+          @posts = Post.joins(:theme).where(themes: {id: params[:theme_id]})
+        else
+          @posts = Post.all
+        end
+
+        # ワード検索
         if params[:search].present?
           search_terms = params[:search].split
           search_query = search_terms.map { |term|
