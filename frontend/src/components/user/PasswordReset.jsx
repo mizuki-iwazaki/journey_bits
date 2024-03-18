@@ -18,15 +18,13 @@ export default function PasswordReset() {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v1/password_resets/reset`, {
+      axios.post(`${process.env.REACT_APP_API_URL}/api/v1/password_resets/reset`, {
         user_id: userId,
         password: password,
         password_confirmation: passwordConfirmation,
       });
-      console.log('パスワードリセット成功', response);
       navigate('/login');
-    } catch (error) {
-      console.error('パスワードリセットエラー', error);
+    } catch {
       setErrorMessage("パスワードリセットに失敗しました。");
     }
   };

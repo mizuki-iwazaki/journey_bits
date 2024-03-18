@@ -22,12 +22,8 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
 
   useEffect(() => {
     const fetchThemes = async () => {
-      try {
-        const themesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/themes`);
-        setThemes(themesResponse.data);
-      } catch (error) {
-        console.error('Error fetching themes:', error);
-      }
+      const themesResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/themes`);
+      setThemes(themesResponse.data);
     };
 
     const fetchPostDetails = async () => {
@@ -52,20 +48,18 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
 
           if (postData.attributes.image_urls) {
             const loadedImageUrls = postData.attributes.image_urls.map(image => ({
-              id: image.id, // 画像のIDを追加
+              id: image.id,
               url: new URL(image.url, process.env.REACT_APP_API_URL).href,
             }));
             setImageUrls(loadedImageUrls);
           }
         } catch (error) {
-          console.error('Error fetching the post details:', error);
           if (error.response && error.response.status === 403) {
             navigate(redirectPath);
           }
         }
       }
     };
-
     fetchThemes();
     fetchPostDetails();
   }, [id, token, navigate, redirectPath]);
@@ -131,15 +125,14 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
           headers: { Authorization: `Bearer ${token}` },
         };
         axios.put(`${process.env.REACT_APP_API_URL}/api/v1/posts/${id}`, formData, config)
-          .then(response => {
-            console.log('Updated successfully:', response.data);
-            navigate(redirectPath);
-            onUpdate();
-            onClose();
-          })
-          .catch(error => {
-            console.error('There was an error updating the post:', error);
-          });
+        .then(() => {
+          navigate(redirectPath);
+          onUpdate();
+          onClose();
+        })
+        .catch(() => {
+          alert('エラーが発生しました。');
+        });
       }
     };
 

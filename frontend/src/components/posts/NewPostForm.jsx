@@ -28,24 +28,21 @@ const NewPostForm = () => {
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/api/v1/themes`)
-      .then(response => {
-        setThemes(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching themes:', error);
-      });
+    .then(response => {
+      setThemes(response.data);
+    })
   }, []);
 
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    const newImages = [...images, ...selectedFiles]; // 既存の画像に新しい画像を追加
+    const newImages = [...images, ...selectedFiles];
     setImages(newImages);
     
     const newImagePreviews = selectedFiles.map(file => ({
       url: URL.createObjectURL(file),
       name: file.name
     }));
-    setImagePreviews(prevPreviews => [...prevPreviews, ...newImagePreviews]); // 既存のプレビューに新しいプレビューを追加
+    setImagePreviews(prevPreviews => [...prevPreviews, ...newImagePreviews]);
   };
 
   const handleSubmit = (event) => {
@@ -68,16 +65,12 @@ const NewPostForm = () => {
       };
 
       axios.post(`${process.env.REACT_APP_API_URL}/api/v1/posts`, formData, config)
-        .then(response => {
-          console.log(response.data);
-          setSelectedTheme('');
-          setContent('');
-          setImages([]);
-          navigate('/posts')
-        })
-        .catch(error => {
-          console.error('There was an error', error);
-        });
+      .then(() => {
+        setSelectedTheme('');
+        setContent('');
+        setImages([]);
+        navigate('/posts')
+      })
     }
   };
 

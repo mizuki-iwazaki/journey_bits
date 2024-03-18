@@ -14,7 +14,6 @@ const LocationInput = ({ onLocationSelect, initialValue }) => {
   const handlePlaceChanged = useCallback(() => {
     const place = autocompleteRef.current.getPlace();
     if (!place.geometry) {
-      console.log("Returned place contains no geometry");
       return;
     }
     onLocationSelect(place.name, place.geometry.location.lat(), place.geometry.location.lng(), place.formatted_address);
@@ -36,7 +35,7 @@ const LocationInput = ({ onLocationSelect, initialValue }) => {
           placeholder="施設名または住所"
           className="form-input shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           aria-label="Location"
-          value={inputValue} // 入力フィールドの値として inputValue を使用
+          value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
       </Autocomplete>

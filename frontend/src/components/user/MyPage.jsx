@@ -5,6 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import EditUserModal from './EditUserModal';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Tabs, Tab, Box } from '@mui/material';
+
 import PostCard from './PostCard';
 import LikedPost from './LikedPost';
 import BookmarkedPosts from './BookmarkedPost';
@@ -47,46 +48,47 @@ const MyPage = () => {
         headers: { Authorization: `Bearer ${token}` },
       };
       axios.get(`${process.env.REACT_APP_API_URL}/api/v1/mypage`, config)
-        .then(response => {
+      .then(response => {
         setUserData(response.data);
 
         const themes = response.data.included
-          .filter(item => item.type === 'theme')
-          .reduce((acc, theme) => ({ ...acc, [theme.id]: theme.attributes.name }), {});
+        .filter(item => item.type === 'theme')
+        .reduce((acc, theme) => ({ ...acc, [theme.id]: theme.attributes.name }), {});
         const users = response.data.included
-          .filter(item => item.type === 'user')
-          .reduce((acc, user) => ({ ...acc, [user.id]: user.attributes.name }), {});
+        .filter(item => item.type === 'user')
+        .reduce((acc, user) => ({ ...acc, [user.id]: user.attributes.name }), {});
 
         const postsData = response.data.included
-          .filter(item => item.type === 'post')
-          .map(post => {
-            const themeId = post.relationships.theme.data.id;
-            const postUserId = post.relationships.user.data.id;
-            const location = post.attributes.location ? {
-              name: post.attributes.location.name,
-              latitude: post.attributes.location.latitude,
-              longitude: post.attributes.location.longitude,
-              address: post.attributes.location.address
-            } : null;
-            const imageUrls = post.attributes.image_urls ? post.attributes.image_urls.map(imageObj => ({
-              id: imageObj.id,
-              url: new URL(imageObj.url, process.env.REACT_APP_API_URL).href
-            })) : [];
+        .filter(item => item.type === 'post')
+        .map(post => {
+          const themeId = post.relationships.theme.data.id;
+          const postUserId = post.relationships.user.data.id;
+          const location = post.attributes.location ? {
+            name: post.attributes.location.name,
+            latitude: post.attributes.location.latitude,
+            longitude: post.attributes.location.longitude,
+            address: post.attributes.location.address
+          } : null;
+          const imageUrls = post.attributes.image_urls ? post.attributes.image_urls.map(imageObj => ({
+            id: imageObj.id,
+            url: new URL(imageObj.url, process.env.REACT_APP_API_URL).href
+          })) : [];
 
-            return {
-              id: post.id,
-              theme: themes[themeId],
-              user: users[postUserId],
-              userId: postUserId,
-              content: post.attributes.content,
-              location,
-              imageUrls,
-              likes_count: post.attributes.likes_count,
-              bookmarks_count: post.attributes.bookmarks_count,
-            };
-          });
+          return {
+            id: post.id,
+            theme: themes[themeId],
+            user: users[postUserId],
+            userId: postUserId,
+            content: post.attributes.content,
+            location,
+            imageUrls,
+            likes_count: post.attributes.likes_count,
+            bookmarks_count: post.attributes.bookmarks_count,
+          };
+        });
         setPosts(postsData);
       })
+      .catch(error => console.error("There was an error!", error));
     }
   }, [token]);
 
@@ -118,8 +120,8 @@ const MyPage = () => {
       });
       setUserData(response.data);
       setEditModalOpen(false);
-    } catch (error) {
-      console.error('プロフィール更新時にエラーが発生しました:', error);
+    } catch {
+      alert('プロフィール更新時にエラーが発生しました');
     }
   };
 
@@ -130,12 +132,12 @@ const MyPage = () => {
       };
 
       axios.delete(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}`, config)
-        .then(() => {
-          setPosts(posts.filter(post => post.id !== postId));
-        })
-        .catch(error => {
-          console.error('Error delete post:', error);
-        });
+      .then(() => {
+        setPosts(posts.filter(post => post.id !== postId));
+      })
+      .catch(() => {
+        alert('投稿の削除に失敗しました。');
+      });
     }
   };
 
@@ -182,7 +184,7 @@ const MyPage = () => {
                 <AccountCircleIcon style={{ fontSize: '100px' }} />
               )}
             </div>
-            <div style={{ marginTop: '10px', fontSize: '15px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <div style={{ marginTop: '10px', marginBottom: '10px', fontSize: '16px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               ユーザー情報を編集
               <EditIcon style={{ marginLeft: '10px', color: 'rgba(0, 0, 0, 0.54)', cursor: 'pointer' }} onClick={() => setEditModalOpen(true)} />
             </div>

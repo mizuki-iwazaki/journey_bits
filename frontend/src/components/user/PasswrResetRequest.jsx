@@ -22,8 +22,7 @@ export default function PasswordResetRequest() {
       } else {
         alert('提供された情報が一致しません。');
       }
-    } catch (error) {
-      console.error('パスワードリセットリクエストエラー', error);
+    } catch {
       alert('入力した項目を確認してください。');
     }
   };
