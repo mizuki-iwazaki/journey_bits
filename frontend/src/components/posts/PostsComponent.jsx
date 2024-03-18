@@ -118,11 +118,9 @@ const PostsComponent = () => {
         });
         setPosts(postsData);
       })
-      .catch(error => {
-        console.error('Error fetching posts:', error);
+      .catch(() => {
+        alert('投稿の取得に失敗しました。')
       });
-    } else {
-      console.log('トークンが取得できません。');
     }
   }, [token]);
 
@@ -145,11 +143,9 @@ const PostsComponent = () => {
         .then(() => {
           setPosts(posts.filter(post => post.id !== postId));
         })
-        .catch(error => {
-          console.error('Error delete post:', error);
+        .catch(() => {
+          alert('投稿の削除に失敗しました。');
         });
-    } else {
-      console.log('トークンが取得できません');
     }
   };
 
@@ -186,23 +182,20 @@ const PostsComponent = () => {
           headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
-        console.log('Like removed', response);
         updateLikeStatus(response.data.data.attributes.liked_by_user);
       })
       .catch(error => {
-        console.error('Error removing like:', error);
+        alert('いいねの取り消しに失敗しました。')
       });
     } else {
       axios.post(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}/likes`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
-          console.log('Like added', response);
-          // 応答後にlikesの状態を更新
-          updateLikeStatus(response.data.data.attributes.liked_by_user);
+        updateLikeStatus(response.data.data.attributes.liked_by_user);
       })
-      .catch(error => {
-          console.error('Error adding like:', error);
+      .catch(() => {
+          alert('いいねの追加に失敗しました。')
       });
     }
   };
@@ -226,23 +219,22 @@ const PostsComponent = () => {
         headers: { Authorization: `Bearer ${token}` }
     })
     .then(response => {
-      console.log('Bookmark removed', response);
       updateBookmarkStatus(response.data.data.attributes.bookmarked_by_user);
     })
-    .catch(error => {
-      console.error('Error removing bookmark:', error);
+    .catch(() => {
+      alert('ブックマークの削除に失敗しました。');
     });
   } else {
     axios.post(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}/bookmarks`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(response => {
-        console.log('Bookmark added', response);
-        // 応答後にbookmarkの状態を更新
-        updateBookmarkStatus(response.data.data.attributes.bookmarked_by_user);
+      console.log('Bookmark added', response);
+      // 応答後にbookmarkの状態を更新
+      updateBookmarkStatus(response.data.data.attributes.bookmarked_by_user);
     })
-    .catch(error => {
-        console.error('Error adding bookmark:', error);
+    .catch(() => {
+      alert('ブックマークの追加に失敗しました。');
     });
   }
 };

@@ -31,6 +31,15 @@ header {
   padding: 1rem; /* 内容物との間隔を設定 */
 }
 
+.search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 /* サイドメニューの基本スタイル */
 .side-menu {
   position: fixed;
@@ -69,11 +78,45 @@ header {
   .grid-container {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
+  .search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .search-form select,
+  .search-form input {
+    width: calc(100% - 0.5rem);
+    margin: 0;
+  }
+
+  .search-form button {
+    width: 50%;
+    margin-left: 0.5rem;
+    /* 必要に応じて固定のサイズを指定 */
+  }
 }
 
 @media (min-width: 640px) and (max-width: 767px) {
   .grid-container {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .search-form {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .search-form select,
+  .search-form input {
+    flex: 1;
+    margin: 0 0.25rem;
+  }
+  .search-form button {
+    width: 20%;
+    margin-left: 0.5rem;
   }
 }
 
@@ -81,11 +124,45 @@ header {
   .grid-container {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  .search-form {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .search-form select,
+  .search-form input {
+    flex: 1;
+    margin: 0 0.25rem;
+  }
+
+  .search-form button {
+    width: 20%;
+    margin-left: 0.5rem;
+  }
 }
 
 @media (min-width: 1024px) {
   .grid-container {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .search-form {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .search-form select,
+  .search-form input {
+    flex: 1;
+    margin: 0 0.25rem;
+  }
+
+  .search-form button {
+    width: 20%;
+    margin-left: 0.5rem;
   }
 }
 
@@ -181,4 +258,3 @@ header {
   background: white;
   padding: 20px;
 }
-

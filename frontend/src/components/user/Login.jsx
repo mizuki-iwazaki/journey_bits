@@ -33,14 +33,9 @@ export default function Login() {
       if (token && userId) {
         login(token, userId, role);
         navigate('/posts');
-      } else {
-        console.error('トークンまたはユーザーIDがレスポンスに含まれていません。');
       }
-    } catch (error) {
-      console.error('ログインエラー', error);
-      if (error.response) {
-        console.error('詳細なエラー情報:', error.response);
-      }
+    } catch {
+      alert('入力した項目を確認してください。');
     }
   };
 

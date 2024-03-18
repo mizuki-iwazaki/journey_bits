@@ -27,7 +27,6 @@ const ImageGallery = () => {
   const handleNextImage = (postId) => {
     const currentPostData = imageUrls.find(image => image.post.id === postId);
     if (!currentPostData) {
-      console.error('Post not found');
       return;
     }
     const newImageIndex = (currentImageIndices[postId] + 1) % currentPostData.post.attributes.image_urls.length;
@@ -41,7 +40,6 @@ const ImageGallery = () => {
   const handlePrevImage = (postId) => {
     const currentPostData = imageUrls.find(image => image.post.id === postId);
     if (!currentPostData) {
-      console.error('Post not found');
       return;
     }
     const totalImages = currentPostData.post.attributes.image_urls.length;
@@ -87,7 +85,7 @@ const ImageGallery = () => {
         headers: { Authorization: `Bearer ${token}` }
       };
 
-    axios.get(`${process.env.REACT_APP_API_URL}/api/v1/albums`, config)
+      axios.get(`${process.env.REACT_APP_API_URL}/api/v1/albums`, config)
       .then(response => {
         // 応答から画像データを取得してstateに設定
         const images = response.data.data.map(post => 
@@ -100,7 +98,9 @@ const ImageGallery = () => {
         setImageUrls(images);
         setPostsData(response.data);
       })
-      .catch(error => console.error('Error fetching images:', error));
+      .catch(() => {
+        alert('エラーが発生しました。');
+      });
     }
   }, [token]);
 

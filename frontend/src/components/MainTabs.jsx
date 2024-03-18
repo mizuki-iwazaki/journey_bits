@@ -38,7 +38,7 @@ const MainTabsComponent = () => {
   };
 
   return (
-    <div className="py-16">
+    <div className="py-12">
       <Tabs value={value} onChange={handleChange} aria-label="Main tabs">
         <Tab label="投稿一覧" />
         <Tab label="アルバム機能" />

@@ -20,8 +20,8 @@ function InquiryList() {
             responded: JSON.parse(localStorage.getItem(`responded-${inquiry.id}`)) || false,
           }));
           setInquiries(fetchedInquiries);
-        } catch (error) {
-          console.error("Error fetching inquiries:", error);
+        } catch {
+          alert('問い合わせの送信に失敗しました。');
         }
       }
     };

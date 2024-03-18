@@ -29,7 +29,6 @@ function InquiryForm() {
         content: ''
       });
     } catch (error) {
-      console.error("問い合わせの送信に失敗しました。", error);
       alert('問い合わせの送信に失敗しました。');
     }
   };

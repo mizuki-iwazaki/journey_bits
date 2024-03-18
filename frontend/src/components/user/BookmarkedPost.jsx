@@ -99,22 +99,20 @@ const BookmarkedPosts = () => {
           headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
-        console.log('Like removed', response);
         updateLikeStatus(response.data.data.attributes.liked_by_user);
       })
       .catch(error => {
-        console.error('Error removing like:', error);
+        alert(`エラーが発生しました: ${error.message}`);
       });
     } else {
       axios.post(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}/likes`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
-          console.log('Like added', response);
           updateLikeStatus(response.data.data.attributes.liked_by_user);
       })
       .catch(error => {
-          console.error('Error adding like:', error);
+        alert(`エラーが発生しました: ${error.message}`);
       });
     }
   };
@@ -137,18 +135,17 @@ const BookmarkedPosts = () => {
       updateBookmarkStatus(response.data.data.attributes.bookmarked_by_user);
     })
     .catch(error => {
-      console.error('Error removing bookmark:', error);
+      alert(`エラーが発生しました: ${error.message}`);
     });
   } else {
     axios.post(`${process.env.REACT_APP_API_URL}/api/v1/posts/${postId}/bookmarks`, {}, {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(response => {
-        console.log('Bookmark added', response);
         updateBookmarkStatus(response.data.data.attributes.bookmarked_by_user);
     })
     .catch(error => {
-        console.error('Error adding bookmark:', error);
+      alert(`エラーが発生しました: ${error.message}`);
     });
   }
 };
@@ -163,11 +160,9 @@ const BookmarkedPosts = () => {
         .then(() => {
           setPosts(posts.filter(post => post.id !== postId));
         })
-        .catch(error => {
-          console.error('Error delete post:', error);
+        .catch(() => {
+          alert('エラーが発生しました');
         });
-    } else {
-      console.log('トークンが取得できません');
     }
   };
   
