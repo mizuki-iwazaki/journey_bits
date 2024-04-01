@@ -71,13 +71,20 @@ const NewPostForm = () => {
         setImages([]);
         navigate('/posts')
       })
+      .catch((error) => {
+        if (error.response && error.response.status === 400) {
+          alert('入力内容を確認してください。');
+        } else {
+          alert('予期せぬエラーが発生しました。');
+        }
+      });
     }
   };
 
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-        <div className="mb-4 pt-16">
+        <div className="mb-4 pt-4">
           <label htmlFor="theme" className="block text-gray-700 text-sm font-bold mb-2 text-left">
             テーマ
           </label>
