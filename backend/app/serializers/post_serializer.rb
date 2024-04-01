@@ -1,7 +1,7 @@
 class PostSerializer
   include FastJsonapi::ObjectSerializer
 
-  attributes :content, :status
+  attributes :content, :status, :created_at
 
   attribute :location do |post|
     if post.location
@@ -36,7 +36,11 @@ class PostSerializer
   end
 
   attribute :bookmarks_count do |post|
-    post.likes.count
+    post.bookmarks.count
+  end
+
+  attribute :theme_name do |post|
+    post.theme.name
   end
 
   belongs_to :user

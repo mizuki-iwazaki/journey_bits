@@ -23,15 +23,11 @@ const LikedPosts = () => {
 
       axios.get(`${process.env.REACT_APP_API_URL}/api/v1/posts/liked_posts`, config)
       .then(response => {
-        const themes = {};
         const users = {};
         if (response.data.included) {
           response.data.included.forEach(item => {
-            if (item.type === 'theme') {
-              themes[item.id] = item.attributes.name;
-            }
             if (item.type === 'user') {
-              users[item.id] = item.attributes.name;
+              users[item.id] = { name: item.attributes.name, avatarUrl: item.attributes.avatar_url || item.attributes.avatar };
             }
           });
         }
@@ -49,7 +45,7 @@ const LikedPosts = () => {
         });
         setBookmarks(initialBookmarks);
         const postsData = response.data.data.map(item => {
-          const themeId = item.relationships.theme.data.id;
+          const themeName = item.attributes.theme_name;
           const postUserId = item.relationships.user.data.id;
           const location = item.attributes.location ? {
             name: item.attributes.location.name,
@@ -65,7 +61,7 @@ const LikedPosts = () => {
 
           return {
             id: item.id,
-            theme: themes[themeId],
+            theme: themeName,
             user: users[postUserId],
             userId: postUserId,
             content: item.attributes.content,
@@ -79,7 +75,7 @@ const LikedPosts = () => {
         setCurrentImageIndices(initialImageIndices);
       })
       .catch(error => {
-        alert('いいね済みの投稿取得に失敗しました。');
+        console.error(error); alert('いいね済みの投稿取得に失敗しました。');
       });
     }
   }, [token, userId]);

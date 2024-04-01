@@ -31,7 +31,7 @@ class PostImageUploader < CarrierWave::Uploader::Base
 
   # Create different versions of your uploaded files:
   version :index_size do
-    process resize_and_pad: [800, 500, '#ffffff', 'Center']
+    process resize_to_fit: [1600, 1200]
   end
 
   # def convert_to_webp

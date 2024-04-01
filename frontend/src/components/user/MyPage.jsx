@@ -5,7 +5,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import EditUserModal from './EditUserModal';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Tabs, Tab, Box } from '@mui/material';
-
 import PostCard from './PostCard';
 import LikedPost from './LikedPost';
 import BookmarkedPosts from './BookmarkedPost';
@@ -60,32 +59,28 @@ const MyPage = () => {
 
         const postsData = response.data.included
         .filter(item => item.type === 'post')
-        .map(post => {
-          const themeId = post.relationships.theme.data.id;
-          const postUserId = post.relationships.user.data.id;
-          const location = post.attributes.location ? {
+        .map(post => ({
+          id: post.id,
+          theme: themes[post.relationships.theme.data.id],
+          user: users[post.relationships.user.data.id],
+          userId: post.relationships.user.data.id,
+          content: post.attributes.content,
+          location: post.attributes.location ? {
             name: post.attributes.location.name,
             latitude: post.attributes.location.latitude,
             longitude: post.attributes.location.longitude,
             address: post.attributes.location.address
-          } : null;
-          const imageUrls = post.attributes.image_urls ? post.attributes.image_urls.map(imageObj => ({
+          } : null,
+          imageUrls: post.attributes.image_urls ? post.attributes.image_urls.map(imageObj => ({
             id: imageObj.id,
             url: new URL(imageObj.url, process.env.REACT_APP_API_URL).href
-          })) : [];
-
-          return {
-            id: post.id,
-            theme: themes[themeId],
-            user: users[postUserId],
-            userId: postUserId,
-            content: post.attributes.content,
-            location,
-            imageUrls,
-            likes_count: post.attributes.likes_count,
-            bookmarks_count: post.attributes.bookmarks_count,
-          };
-        });
+          })) : [],
+          likes_count: post.attributes.likes_count,
+          bookmarks_count: post.attributes.bookmarks_count,
+          created_at: post.attributes.created_at, // created_atを加工
+        }))
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // ここでソート
+  
         setPosts(postsData);
       })
       .catch(error => console.error("There was an error!", error));
@@ -219,7 +214,7 @@ const MyPage = () => {
                     isExpanded={expandedPosts[post.id]}
                     onToggleExpand={handleToggleExpand}
                     onDeletePost={deletePost}
-                    currentImageIndex={currentImageIndices[post.id]}
+                    currentIndex={currentImageIndices[post.id]}
                     onNextImage={handleNextImage}
                     onPrevImage={handlePrevImage}
                     loggedInUserId={userData.data.id}

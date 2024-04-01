@@ -9,7 +9,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import EditIcon from '@mui/icons-material/Edit';
 import EditPostComponent from '../posts/EditPostComponent';
 import Modal from './Modal'; // Modal コンポーネントをインポート
-
+import { getBackgroundColorByTheme } from '../posts/PostCardColor';
 
 const truncateText = (text, maxLength) => {
   if (text.length > maxLength) {
@@ -18,12 +18,13 @@ const truncateText = (text, maxLength) => {
   return { truncated: false, text };
 };
 
-const PostCard = ({ post, onToggleExpand, onDeletePost, onNextImage, onPrevImage, isExpanded, currentImageIndex, loggedInUserId, onLike, onBookmark, liked, bookmarked, onUpdate, onClose }) => {
+const PostCard = ({ post, onToggleExpand, onDeletePost, onNextImage, onPrevImage, isExpanded, currentIndex, loggedInUserId, onLike, onBookmark, liked, bookmarked, onUpdate, onClose }) => {
   const { truncated, text } = truncateText(post.content, 50);
   const [isEditing, setIsEditing] = useState(false);
+  const backgroundColor = getBackgroundColorByTheme(post.theme);
 
   return (
-    <div className="max-w-lg rounded overflow-hidden shadow-lg bg-white flex flex-col justify-between">
+    <div className="max-w-lg rounded overflow-hidden shadow-lg bg-white flex flex-col justify-between"  style={{ backgroundColor }}>
       <div className="px-6 py-4">
         <div className="font-bold text-xs mb-4 text-left">{post.user}</div>
         <div className="font-bold text-sl mb-2 text-left">テーマ：{post.theme}</div>
@@ -37,12 +38,12 @@ const PostCard = ({ post, onToggleExpand, onDeletePost, onNextImage, onPrevImage
         </p>
         <div className="relative">
           {post.imageUrls.length === 0 && (
-            <img src={`${process.env.REACT_APP_API_URL}/uploads/image/image_file/default.jpg`} alt="Default" />
+            <img src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload/w_800,h_600,c_fill/v1709134445/default.jpeg`} alt="Default" />
           )}
           {post.imageUrls.length > 0 && (
             <ImageSlider
               imageUrls={post.imageUrls}
-              currentIndex={currentImageIndex}
+              currentIndex={currentIndex ?? 0}
               onNext={() => onNextImage(post.id)}
               onPrev={() => onPrevImage(post.id)}
             />

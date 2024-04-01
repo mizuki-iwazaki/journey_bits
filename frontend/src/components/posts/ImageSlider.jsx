@@ -5,11 +5,13 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 const ImageSlider = ({ imageUrls, currentIndex, onNext, onPrev }) => {
     if (imageUrls.length === 1) {
       return (
+        <div className="image-slider-container">
         <img
+        className="image-slider-img"
           src={imageUrls[0].url}
           alt={`${currentIndex}`}
-          className="w-full h-auto object-contain"
         />
+        </div>
       );
   }
   return (
@@ -19,11 +21,13 @@ const ImageSlider = ({ imageUrls, currentIndex, onNext, onPrev }) => {
           <ArrowBackIosNewIcon />
         </button>
       )}
+      <div className="image-slider-container">
       <img
         src={imageUrls[currentIndex]?.url}
         alt={`${currentIndex}`}
-        className="w-full h-auto object-contain"
+        className="image-slider-img"
       />
+      </div>
 
       {currentIndex < imageUrls.length - 1 && (
         <button onClick={onNext} className="absolute right-0 top-1/2 transform -translate-y-1/2">
