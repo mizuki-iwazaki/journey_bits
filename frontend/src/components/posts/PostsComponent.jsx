@@ -11,6 +11,7 @@ import ImageSlider from './ImageSlider';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SearchForm from './SearchForm';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { getBackgroundColorByTheme } from './PostCardColor';
 
 // 投稿を文字数で区切る
 const truncateText = (text, maxLength) => {
@@ -243,7 +244,7 @@ const PostsComponent = () => {
     <div className="px-4">
       {/* 投稿一覧 */}
       <div className="form-container mx-auto">
-        <div className="flex justify-center py-4">
+        <div className="flex justify-center">
         {/* 検索フォーム */}
         <SearchForm onSearch={fetchPosts} />
         </div>
@@ -254,96 +255,101 @@ const PostsComponent = () => {
             const { truncated, text } = truncateText(post.content, 50);
             const isExpanded = expandedPosts[post.id];
             const isCurrentUser = loggedInUserId ? loggedInUserId.toString() === post.user.id.toString() : false;
+            const backgroundColor = getBackgroundColorByTheme(post.theme);
 
             return (
-              <div key={post.id} className="max-w-lg rounded overflow-hidden shadow-lg bg-white flex flex-col justify-between">
+              <div 
+                key={post.id} 
+                className="max-w-lg rounded overflow-hidden shadow-lg bg-white flex flex-col justify-between"
+                style={{ backgroundColor }} // 背景色を動的に適用
+              >
                 <div className="px-6 py-2">
-                <div className="py-2 font-bold text-xs text-left">{post.user.name}</div>
-                  {post.user.avatarUrl ? (
-                    <img className="w-10 h-10 rounded-full mr-4" src={post.user.avatarUrl} alt="Avatar" />
-                  ) : (
-                    <div className="flex items-center">
-                      <AccountCircleIcon style={{ fontSize: 40, marginRight: '1rem' }} />
+                  <div className="py-2 font-bold text-xs text-left">{post.user.name}</div>
+                    {post.user.avatarUrl ? (
+                      <img className="w-10 h-10 rounded-full mr-4" src={post.user.avatarUrl} alt="Avatar" />
+                    ) : (
+                      <div className="flex items-center">
+                        <AccountCircleIcon style={{ fontSize: 40, marginRight: '1rem' }} />
+                      </div>
+                    )}
+                    <div className="font-bold text-sm mb-2 text-left">テーマ：{post.theme}</div>
+                    <p className="text-gray-700 text-left text-sm">
+                      {isExpanded ? post.content : text}
+                      {truncated && (
+                        <button onClick={() => handleToggleExpand(post.id)} className="text-blue-500">
+                          {isExpanded ? '隠す' : '続きを読む'}
+                        </button>
+                      )}
+                    </p>
+                    <div className="relative">
+                      {post.imageUrls.length === 0 && (
+                        <img src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload/w_800,h_600,c_fill/v1709134445/default.jpeg`} alt="Default" />
+                      )}
+                      {post.imageUrls.length > 0 && (
+                        <ImageSlider
+                          imageUrls={post.imageUrls}
+                          currentIndex={currentImageIndices[post.id] || 0}
+                          onNext={() => handleNextImage(post.id)}
+                          onPrev={() => handlePrevImage(post.id)}
+                        />
+                      )}
                     </div>
-                  )}
-                  <div className="font-bold text-sm mb-2 text-left">テーマ：{post.theme}</div>
-                  <p className="text-gray-700 text-left text-sm">
-                    {isExpanded ? post.content : text}
-                    {truncated && (
-                      <button onClick={() => handleToggleExpand(post.id)} className="text-blue-500">
-                        {isExpanded ? '隠す' : '続きを読む'}
-                      </button>
-                    )}
-                  </p>
-                  <div className="relative">
-                    {post.imageUrls.length === 0 && (
-                      <img src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload/w_800,h_500,c_fill/v1709134445/default.jpeg`} alt="Default" />
-                    )}
-                    {post.imageUrls.length > 0 && (
-                      <ImageSlider
-                        imageUrls={post.imageUrls}
-                        currentIndex={currentImageIndices[post.id] || 0}
-                        onNext={() => handleNextImage(post.id)}
-                        onPrev={() => handlePrevImage(post.id)}
-                      />
-                    )}
                   </div>
-                </div>
-                <div className="flex items-left px-6 py-2">
-                  <LocationOnIcon />
-                  <p className="text-gray-700 text-sm">{post.location.name}</p>
-                </div>
-                <div className="flex justify-between items-center px-6 py-2">
-                  <div className="grid grid-cols-2 gap-3 items-center">
-                    {!isCurrentUser && (
-                      <>
-                        <LikeButton
-                          postId={post.id}
-                          liked={likes[post.id]}
-                          onLike={handleLike}
-                        />
-                        <BookmarkButton
-                          postId={post.id}
-                          bookmarked={bookmarks[post.id]}
-                          onBookmark={handleBookmark}
-                        />
-                      </>
-                    )}
+                  <div className="flex items-left px-6 py-2">
+                    <LocationOnIcon />
+                    <p className="text-gray-700 text-sm">{post.location.name}</p>
                   </div>
-                  <div className="flex items-center">
-                    {isCurrentUser && (
-                      <>
-                        <button
-                          onClick={() => {
-                            setIsEditing(true);
-                            setEditingPostId(post.id);
-                            setIsEditing(true);
-                          }}
-                          className="button-shared-style icon-button bg-green-500 text-white"
-                        >
-                          <EditIcon />
-                        </button>
-                        <Modal isOpen={isEditing && editingPostId === post.id} onClose={() => setIsEditing(false)}>
-                          <EditPostComponent
-                            id={post.id}
-                            redirectPath="/posts"
-                            onUpdate={onUpdate}
-                            onClose={() => {
-                              setIsEditing(false);
-                              setEditingPostId(null);
+                  <div className="flex justify-between items-center px-6 py-2">
+                    <div className="grid grid-cols-2 gap-3 items-center">
+                      {!isCurrentUser && (
+                        <>
+                          <LikeButton
+                            postId={post.id}
+                            liked={likes[post.id]}
+                            onLike={handleLike}
+                          />
+                          <BookmarkButton
+                            postId={post.id}
+                            bookmarked={bookmarks[post.id]}
+                            onBookmark={handleBookmark}
+                          />
+                        </>
+                      )}
+                    </div>
+                    <div className="flex items-center">
+                      {isCurrentUser && (
+                        <>
+                          <button
+                            onClick={() => {
+                              setIsEditing(true);
+                              setEditingPostId(post.id);
+                              setIsEditing(true);
                             }}
-                            />
-                        </Modal>
-                        <button onClick={() => deletePost(post.id)} className="button-shared-style icon-button bg-red-500 text-white">
-                          <DeleteIcon />
-                        </button>
-                      </>
-                    )}
+                            className="button-shared-style icon-button bg-green-500 text-white"
+                          >
+                            <EditIcon />
+                          </button>
+                          <Modal isOpen={isEditing && editingPostId === post.id} onClose={() => setIsEditing(false)}>
+                            <EditPostComponent
+                              id={post.id}
+                              redirectPath="/posts"
+                              onUpdate={onUpdate}
+                              onClose={() => {
+                                setIsEditing(false);
+                                setEditingPostId(null);
+                              }}
+                              />
+                          </Modal>
+                          <button onClick={() => deletePost(post.id)} className="button-shared-style icon-button bg-red-500 text-white">
+                            <DeleteIcon />
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { useJsApiLoader } from '@react-google-maps/api';
-import { AuthProvider } from './components/user/AuthContext';
+import AuthContext from './components/user/AuthContext';
 import Header from './components/shared/Header';
 import SignUp from './components/user/SignUp';
 import Login from './components/user/Login';
@@ -12,7 +12,8 @@ import Footer from './components/shared/Footer';
 import TermsOfService from './components/shared/TermsOfService';
 import PrivacyPolicy from './components/shared/PrivacyPolicy';
 import InquiryForm from './components/shared/InquiryForm';
-import MainTabs from './components/MainTabs';
+import MainTabsComponent from './components/MainTabs';
+import PostsComponent from './components/posts/PostsComponent';
 import NewPostForm from './components/posts/NewPostForm';
 import EditPostComponent from './components/posts/EditPostComponent';
 import MyPage from './components/user/MyPage';
@@ -41,6 +42,7 @@ const usePageTracking = () => {
 const libraries = ['places'];
 
 const App = () => {
+  const { isLoggedIn } = useContext(AuthContext);
   usePageTracking();
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -57,32 +59,33 @@ const App = () => {
   }
 
   return (
-    <AuthProvider>
       <div className="App">
         <Header />
-        <Routes>
-          <Route path="/" element={<AppIntrosection />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/password-reset-request" element={<PasswordResetRequest />} />
-          <Route path="/password-reset" element={<PasswordReset />} />
-          <Route path="/posts" element={<MainTabs />} />
-          <Route path="/posts/create" element={<ProtectedRoute><NewPostForm /></ProtectedRoute> } />
-          <Route path="/posts/:id/edit" element={<EditPostComponent />} />
-          <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute> } />
-          <Route path="/albums" element={<ProtectedRoute><ImageGallery /></ProtectedRoute> } />
-          <Route path="/maps" element={<ProtectedRoute><MapWithPins /></ProtectedRoute> } />
-          <Route path="/legal/terms_of_service" element={<TermsOfService />} />
-          <Route path="/legal/privacy_policy" element={<PrivacyPolicy />} />
-          <Route path="themes" element={<ThemeList />} />
-          <Route path="/themes/:id/edit" element={<EditTheme />} />
-          <Route path="/theme/create" element={<ThemeForm />} />
-          <Route path="/inquiry/create" element={<InquiryForm />} />
-          <Route path="/inquiries" element={<InquiryList/>} />
-        </Routes>
+        <div>
+        {isLoggedIn && <MainTabsComponent />}
+          <Routes>
+            <Route path="/" element={<AppIntrosection />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/password-reset-request" element={<PasswordResetRequest />} />
+            <Route path="/password-reset" element={<PasswordReset />} />
+            <Route path="/posts" element={<PostsComponent />} />
+            <Route path="/posts/create" element={<ProtectedRoute><NewPostForm /></ProtectedRoute> } />
+            <Route path="/posts/:id/edit" element={<EditPostComponent />} />
+            <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute> } />
+            <Route path="/albums" element={<ProtectedRoute><ImageGallery /></ProtectedRoute> } />
+            <Route path="/maps" element={<ProtectedRoute><MapWithPins /></ProtectedRoute> } />
+            <Route path="/legal/terms_of_service" element={<TermsOfService />} />
+            <Route path="/legal/privacy_policy" element={<PrivacyPolicy />} />
+            <Route path="themes" element={<ThemeList />} />
+            <Route path="/themes/:id/edit" element={<EditTheme />} />
+            <Route path="/theme/create" element={<ThemeForm />} />
+            <Route path="/inquiry/create" element={<InquiryForm />} />
+            <Route path="/inquiries" element={<InquiryList/>} />
+          </Routes>
+        </div>
         <Footer />
       </div>
-    </AuthProvider>
   );
 };
 

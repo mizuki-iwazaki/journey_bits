@@ -108,10 +108,10 @@ const ImageGallery = () => {
     <>
       <div className="px-4 py-8">
         <div className="form-container mx-auto">
-          <div className="flex justify-center py-4">
-            <div className="grid-container">
+          <div className="justify-center py-4">
+            <div className="album-grid">
               {imageUrls.map((image, index) => (
-                <div key={index} className="image-item" onClick={() => handleImageClick(image)}>
+                <div key={index} className="album-item" onClick={() => handleImageClick(image)}>
                   <img src={image.url} alt={`${index}`} />
                 </div>
               ))}

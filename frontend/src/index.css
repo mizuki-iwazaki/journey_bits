@@ -35,6 +35,7 @@ header {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 90%;
   align-items: center;
   max-width: 1000px;
   margin: 0 auto;
@@ -92,8 +93,9 @@ header {
   }
 
   .search-form button {
-    width: 50%;
+    flex: none;
     margin-left: 0.5rem;
+    width: 40%;
     /* 必要に応じて固定のサイズを指定 */
   }
 }
@@ -102,21 +104,13 @@ header {
   .grid-container {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .search-form {
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    gap: 0.5rem;
-  }
-
-  .search-form select,
-  .search-form input {
-    flex: 1;
-    margin: 0 0.25rem;
-  }
-  .search-form button {
-    width: 20%;
-    margin-left: 0.5rem;
+  @media (min-width: 640px) {
+    .search-form {
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      gap: 0.5rem;
+    }
   }
 }
 
@@ -132,13 +126,14 @@ header {
   }
 
   .search-form select,
-  .search-form input {
+  .search-form input,
+  .search-form button {
     flex: 1;
     margin: 0 0.25rem;
   }
 
   .search-form button {
-    width: 20%;
+    flex: none;
     margin-left: 0.5rem;
   }
 }
@@ -161,7 +156,7 @@ header {
   }
 
   .search-form button {
-    width: 20%;
+    width: 40%;
     margin-left: 0.5rem;
   }
 }
@@ -213,15 +208,47 @@ header {
   object-fit: contain;
 }
 
-.image-slider-img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  width: auto;
-  height: auto;
+.image-slider-container {
+  display: block;
+  width: 100%;
+  padding-top: 100%;
+  position: relative;
 }
 
-/* index.css */
+.image-slider-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.album-grid {
+  display: grid;
+  gap: 16px; /* アイテム間のギャップを16pxに設定 */
+  padding: 16px; /* コンテナのパディングを16pxに設定 */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-auto-rows: 250px; /* 行の最小高さを設定 */
+}
+
+.album-item {
+  overflow: hidden;
+  border-radius: 8px; /* 角を丸く */
+  box-shadow: 0 4px 8px rgba(0,0,0,.2); /* 影をつける */
+  transition: transform 0.3s ease;
+}
+
+.album-item img {
+  width: 100%; /* コンテナの幅に合わせて画像を伸ばす */
+  height: 100%; /* 高さをコンテナに合わせる */
+  object-fit: cover; /* 画像をコンテナに合わせてトリミング */
+}
+
+.album-item:hover {
+  transform: scale(1.05); /* ホバー時に画像を少し拡大 */
+}
+
 .overlay {
   position: fixed;
   top: 0;

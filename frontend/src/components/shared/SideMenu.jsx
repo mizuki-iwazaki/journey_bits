@@ -15,6 +15,7 @@ const SideMenu = ({ isOpen, toggleMenu, logout, isAdmin }) => {
       </button>
       {/* サイドメニューのリンクとアクション */}
       <ul className="pt-10">
+        {/*
         <li className="p-2">
           <Link to={`/mypage`} onClick={handleCloseMenu}>マイページ</Link>
         </li>
@@ -27,6 +28,7 @@ const SideMenu = ({ isOpen, toggleMenu, logout, isAdmin }) => {
         <li className="p-2">
           <Link to={`/albums`} onClick={handleCloseMenu}>アルバム</Link>
         </li>
+         */}
         <li className="p-2">
           <button onClick={() => { logout(); toggleMenu(); }}>ログアウト</button>
         </li>
