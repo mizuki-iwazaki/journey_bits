@@ -20,11 +20,12 @@ const MainTabsComponent = () => {
       setValue(2);
     } else if (path.includes('/mypage')) {
       setValue(3);
-    }
+    } else if (path.includes('/recommendations'))
+      setValue(4);
   }, [location.pathname]);
 
   const handleChange = (event, newValue) => {
-    if (isGuest && [1, 2, 3].includes(newValue)) {
+    if (isGuest && [1, 2, 3, 4].includes(newValue)) {
       alert('この機能を使用するにはログインが必要です。');
       navigate('/login');
       return;
@@ -45,6 +46,9 @@ const MainTabsComponent = () => {
       case 3:
         navigate('/mypage');
         break;
+      case 4:
+        navigate('/recommendations');
+        break;
       default:
         break;
     }
@@ -57,6 +61,7 @@ const MainTabsComponent = () => {
         <Tab label="アルバム機能" />
         <Tab label="Map機能" />
         <Tab label="マイページ" />
+        <Tab label="おすすめの場所" />
       </Tabs>
     </div>
   );

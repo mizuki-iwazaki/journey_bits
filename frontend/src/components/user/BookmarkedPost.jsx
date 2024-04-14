@@ -127,7 +127,6 @@ const BookmarkedPosts = () => {
         headers: { Authorization: `Bearer ${token}` }
     })
     .then(response => {
-      console.log('Bookmark removed', response);
       updateBookmarkStatus(response.data.data.attributes.bookmarked_by_user);
     })
     .catch(error => {

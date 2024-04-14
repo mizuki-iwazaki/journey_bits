@@ -230,7 +230,6 @@ const PostsComponent = () => {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(response => {
-      console.log('Bookmark added', response);
       // 応答後にbookmarkの状態を更新
       updateBookmarkStatus(response.data.data.attributes.bookmarked_by_user);
     })

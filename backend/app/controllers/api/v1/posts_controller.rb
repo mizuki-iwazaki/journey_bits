@@ -38,13 +38,14 @@ module Api
       end
 
       def create
-        post = current_user.posts.new(post_params.except(:image_file))
+        @post = current_user.posts.new(post_params.except(:image_file))
 
-        if post.save
-          process_images(post, params[:post][:image_file])
-          render json: PostSerializer.new(post).serialized_json
+        if @post.save
+          process_images(@post, params[:post][:image_file])
+          ImageAnalysesJob.perform_later(@post.id) if @post.images.any?
+          render json: PostSerializer.new(@post).serialized_json
         else
-          render_400(nil, post.errors.full_messages)
+          render_400(nil, @post.errors.full_messages)
         end
       end
 
