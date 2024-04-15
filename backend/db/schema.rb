@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_24_114506) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_02_125737) do
+  create_table "analysis_results", force: :cascade do |t|
+    t.integer "post_id", null: false
+    t.integer "image_id"
+    t.json "detected_objects"
+    t.json "detected_labels"
+    t.json "recommendations"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["image_id"], name: "index_analysis_results_on_image_id"
+    t.index ["post_id"], name: "index_analysis_results_on_post_id"
+  end
+
   create_table "api_keys", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "access_token", null: false
@@ -101,6 +113,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_24_114506) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "analysis_results", "images"
+  add_foreign_key "analysis_results", "posts"
   add_foreign_key "api_keys", "users"
   add_foreign_key "bookmarks", "posts"
   add_foreign_key "bookmarks", "users"
