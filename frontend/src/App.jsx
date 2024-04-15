@@ -84,7 +84,7 @@ const App = () => {
               <Route path="/mypage" element={<ProtectedRoute><MyPage /></ProtectedRoute> } />
               <Route path="/albums" element={<ProtectedRoute><ImageGallery /></ProtectedRoute> } />
               <Route path="/maps" element={<ProtectedRoute><MapWithPins /></ProtectedRoute> } />
-              <Route path="/recommendations" element={<ProtectedRoute><Recommendation /></ProtectedRoute>} />
+              <Route path="/recommendations" element={<ProtectedRoute>  <Recommendation isMapsLoaded={isLoaded} mapsLoadError={loadError} /></ProtectedRoute>} />
               <Route path="/legal/terms_of_service" element={<TermsOfService />} />
               <Route path="/legal/privacy_policy" element={<PrivacyPolicy />} />
               <Route path="themes" element={<ThemeList />} />

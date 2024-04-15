@@ -22,7 +22,7 @@ class AnalysisResult < ApplicationRecord
     labels.each do |label|
       # URI.encode_www_form_componentを使用してラベルをエンコード
       query = URI.encode_www_form_component(label)
-      uri = URI("https://maps.googleapis.com/maps/api/place/textsearch/json?query=#{query}&key=#{api_key}")
+      uri = URI("https://maps.googleapis.com/maps/api/place/textsearch/json?query=#{query}&key=#{api_key}&language=ja")
 
       response = Net::HTTP.get(uri)
       results = JSON.parse(response)['results']
@@ -36,6 +36,8 @@ class AnalysisResult < ApplicationRecord
           recommendations << {
             name: place['name'],
             address: place['formatted_address'],
+            latitude: place['geometry']['location']['lat'],
+            longitude: place['geometry']['location']['lng'],
             place_id: place['place_id'],
             types: place['types'],
             photo_urls: photo_urls,

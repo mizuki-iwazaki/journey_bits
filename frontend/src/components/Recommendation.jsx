@@ -2,11 +2,20 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from './user/AuthContext';
 import { useLoading } from './LoadingProvider';
+import MapModal from './MapModal';
 
-const Recommendations = () => {
+const Recommendations = ({ isMapsLoaded }) => {
   const { token } = useContext(AuthContext);
   const [recommendations, setRecommendations] = useState([]);
   const { loading, setLoading } = useLoading();
+  const [mapModalOpen, setMapModalOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+
+
+  const handleMapOpen = (location) => {
+    setSelectedLocation(location);
+    setMapModalOpen(true);
+  };
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -43,6 +52,10 @@ const Recommendations = () => {
                 <img key={imgIndex} src={url} alt={`${recommendation.name}の景色${imgIndex + 1}`} className="w-full object-cover" style={{ height: '200px' }} />
               ))}
               <p className="text-gray-500 text-left">Rating: {recommendation.rating || 'N/A'}</p>
+              <p className="text-gray-500 text-left">レビュー数: {recommendation.user_ratings_total.toLocaleString()}件</p>
+              <p className="text-gray-700 text-left cursor-pointer" onClick={() => handleMapOpen(recommendation)}>
+              {recommendation.address}
+            </p>
             </div>
           </div>
         ))
@@ -51,6 +64,14 @@ const Recommendations = () => {
           <p>おすすめ表示をするために、投稿をお試しください。</p>
         </div>
       )}
+      {selectedLocation && (
+      <MapModal
+        isOpen={mapModalOpen}
+        onClose={() => setMapModalOpen(false)}
+        location={selectedLocation}
+        isLoaded={isMapsLoaded}
+      />
+    )}
     </div>
   );
 };
