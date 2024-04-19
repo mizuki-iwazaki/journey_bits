@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AuthContext from '../user/AuthContext';
 import CloseIcon from '@mui/icons-material/Close';
 import LocationInput from './LocationInput';
+import TagEditor from './TagEditor';
 
 const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) => {
   const { token } = useContext(AuthContext);
@@ -19,6 +20,7 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
   const [removeImages, setRemoveImages] = useState([]);
   const [status, setStatus] = useState('published');
   const fileInputRef = useRef();
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     const fetchThemes = async () => {
@@ -45,6 +47,7 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
           };
           setLocation(locationData);
           setInitialLocation(locationData);
+          setTags(postData.attributes.tags || []);
 
           if (postData.attributes.image_urls) {
             const loadedImageUrls = postData.attributes.image_urls.map(image => ({
@@ -120,6 +123,10 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
         formData.append('post[remove_image_ids][]', imageId);
       });
 
+      tags.forEach(tag => {
+        formData.append('post[tag_list][]', tag.trim());
+      });
+
       if (token) {
         const config = {
           headers: { Authorization: `Bearer ${token}` },
@@ -131,7 +138,7 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
           onClose();
         })
         .catch(() => {
-          alert('エラーが発生しました。');
+          alert('更新に失敗しました。');
         });
       }
     };
@@ -198,6 +205,16 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
               </button>
             </div>
             ))}
+          </div>
+          <div className="mb-4">
+            <label htmlFor="tags" className="block text-gray-700 text-sm font-bold mb-2 text-left">
+              タグ
+            </label>
+            <TagEditor
+              tags={tags}
+              setTags={setTags}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
           </div>
           <div className="mb-4">
           <label htmlFor="status" className="block text-gray-700 text-sm font-bold mb-2 text-left">
