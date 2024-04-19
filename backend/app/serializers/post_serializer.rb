@@ -43,6 +43,10 @@ class PostSerializer
     post.theme.name
   end
 
+  attribute :tags do |post|
+    post.tag_list
+  end
+
   belongs_to :user
   belongs_to :theme
   belongs_to :location

@@ -43,6 +43,7 @@ gem 'mini_magick'
 gem 'cloudinary'
 gem 'google-cloud-vision'
 gem 'google_maps_service'
+gem 'acts-as-taggable-on'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

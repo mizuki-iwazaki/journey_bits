@@ -12,6 +12,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import SearchForm from './SearchForm';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { getBackgroundColorByTheme } from './PostCardColor';
+import StyleIcon from '@mui/icons-material/Style';
 
 // 投稿を文字数で区切る
 const truncateText = (text, maxLength) => {
@@ -47,6 +48,11 @@ const PostsComponent = () => {
       }
       if (searchParams.selectedTheme) {
         config.params['theme_id'] = searchParams.selectedTheme;
+      }
+
+      // タグの検索
+      if (searchParams.tag) {
+        config.params['tag'] =searchParams.tag;
       }
 
       axios.get(`${process.env.REACT_APP_API_URL}/api/v1/posts`, config)
@@ -100,6 +106,7 @@ const PostsComponent = () => {
               id: imageObj.id,
               url: new URL(imageObj.url, process.env.REACT_APP_API_URL).href
             })) : [];
+            const tags = item.attributes.tags || [];
 
           return {
             id: item.id,
@@ -113,6 +120,7 @@ const PostsComponent = () => {
             location: location,
             imageUrls: imageUrls,
             status: item.attributes.status,
+            tags: tags,
             liked: initialLikes[item.id],
             bookmarked: initialBookmarks[item.id],
           };
@@ -124,6 +132,10 @@ const PostsComponent = () => {
       });
     }
   }, [token]);
+
+  const handleTagClick = (tag) => {
+    fetchPosts({ tag: tag });
+  };
 
   useEffect(() => {
     fetchPosts();
@@ -230,7 +242,6 @@ const PostsComponent = () => {
       headers: { Authorization: `Bearer ${token}` }
     })
     .then(response => {
-      // 応答後にbookmarkの状態を更新
       updateBookmarkStatus(response.data.data.attributes.bookmarked_by_user);
     })
     .catch(() => {
@@ -262,17 +273,17 @@ const PostsComponent = () => {
                 className="max-w-lg rounded overflow-hidden shadow-lg bg-white flex flex-col justify-between"
                 style={{ backgroundColor }} // 背景色を動的に適用
               >
-                <div className="px-6 py-2">
+                <div className="px-4 py-2">
                   <div className="py-2 font-bold text-xs text-left">{post.user.name}</div>
                     {post.user.avatarUrl ? (
                       <img className="w-10 h-10 rounded-full mr-4" src={post.user.avatarUrl} alt="Avatar" />
                     ) : (
                       <div className="flex items-center">
-                        <AccountCircleIcon style={{ fontSize: 40, marginRight: '1rem' }} />
+                        <AccountCircleIcon style={{ fontSize: 50, marginRight: '1rem' }} />
                       </div>
                     )}
-                    <div className="font-bold text-sm mb-2 text-left">テーマ：{post.theme}</div>
-                    <p className="text-gray-700 text-left text-sm">
+                    <div className="font-bold text-sm pt-2 text-left">テーマ：{post.theme}</div>
+                    <p className="text-gray-700 text-left text-sm py-2">
                       {isExpanded ? post.content : text}
                       {truncated && (
                         <button onClick={() => handleToggleExpand(post.id)} className="text-blue-500">
@@ -294,10 +305,31 @@ const PostsComponent = () => {
                       )}
                     </div>
                   </div>
-                  <div className="flex items-left px-6 py-2">
-                    <LocationOnIcon />
-                    <p className="text-gray-700 text-sm">{post.location.name}</p>
-                  </div>
+                  {post.location && post.location.name && (
+                    <div className="flex items-left px-2 py-2">
+                      <LocationOnIcon />
+                      <p className="text-gray-700 text-sm">{post.location.name}</p>
+                    </div>
+                  )}
+                  {post.tags && post.tags.length > 0 && (
+                    <div className="flex items-left px-2">
+                      <StyleIcon />
+                      {post.tags && post.tags.length > 0 && (
+                        <div className="px-2">
+                          {post.tags.map(tag => (
+                            <span
+                              key={tag}
+                              className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                              onClick={() => handleTagClick(tag)}
+                              style={{ cursor: 'pointer' }}
+                            >
+                              #{tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   <div className="flex justify-between items-center px-6 py-2">
                     <div className="grid grid-cols-2 gap-3 items-center">
                       {!isCurrentUser && (

@@ -13,6 +13,11 @@ module Api
           @posts = @posts.joins(:theme).where(themes: {id: params[:theme_id]})
         end
 
+        # タグ検索
+        if params[:tag].present?
+          @posts = @posts.tagged_with(params[:tag])
+        end
+
         # ワード検索
         if params[:search].present?
           search_terms = params[:search].split
@@ -103,7 +108,8 @@ module Api
           :theme_id,
           { image_file: [], remove_image_ids: [] },
           { location_attributes: [:name, :latitude, :longitude, :address] },
-          :status
+          :status,
+          tag_list: []
         )
       end
 
