@@ -55,12 +55,14 @@ const App = () => {
     language: 'ja',
   });
 
-  if (!isLoaded) {
-    setLoading(true);
-  }
-
   if (loadError) {
     setLoading(false);
+    return <div>Error loading maps</div>;
+  }
+
+  if (!isLoaded) {
+    setLoading(true);
+    return null;
   }
 
   return (

@@ -7,6 +7,7 @@ class Post < ApplicationRecord
   has_many :analysis_results, dependent: :destroy
   has_one :location, dependent: :destroy
   accepts_nested_attributes_for :location
+  acts_as_taggable_on :tags
 
   validates :content, presence: true, length: { maximum: 65_535 }
   validates :theme_id, presence: true

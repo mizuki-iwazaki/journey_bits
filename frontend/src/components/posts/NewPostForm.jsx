@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AuthContext from '../user/AuthContext';
 import LocationInput from './LocationInput';
 import CloseIcon from '@mui/icons-material/Close';
+import TagEditor from './TagEditor';
 
 const NewPostForm = () => {
   const { token } = useContext(AuthContext);
@@ -13,6 +14,7 @@ const NewPostForm = () => {
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [status, setStatus] = useState('published')
+  const [tags, setTags] = useState('');
   const navigate = useNavigate();
   const [location, setLocation] = useState({
     name: '',
@@ -45,6 +47,10 @@ const NewPostForm = () => {
     setImagePreviews(prevPreviews => [...prevPreviews, ...newImagePreviews]);
   };
 
+  const updateTags = (newTags) => {
+    setTags(newTags);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -57,6 +63,9 @@ const NewPostForm = () => {
     formData.append('post[location_attributes][address]', location.address);
     images.forEach((image) => {
       formData.append('post[image_file][]', image);
+    });
+    tags.forEach((tag) => {
+      formData.append(`post[tag_list][]`, tag.trim());
     });
 
     if (token) {
@@ -139,6 +148,16 @@ const NewPostForm = () => {
               </button>
             </div>
           ))}
+        </div>
+        <div className="mb-4">
+          <label htmlFor="tags" className="block text-gray-700 text-sm font-bold mb-2 text-left">
+            タグ
+          </label>
+          <TagEditor
+            tags={tags}
+            setTags={updateTags}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
         </div>
         <div className="mb-4">
         <label htmlFor="status" className="block text-gray-700 text-sm font-bold mb-2 text-left">
