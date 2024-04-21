@@ -14,7 +14,7 @@ const NewPostForm = () => {
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [status, setStatus] = useState('published')
-  const [tags, setTags] = useState('');
+  const [tags, setTags] = useState([]);
   const navigate = useNavigate();
   const [location, setLocation] = useState({
     name: '',
