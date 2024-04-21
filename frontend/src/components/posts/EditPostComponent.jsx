@@ -47,7 +47,7 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
           };
           setLocation(locationData);
           setInitialLocation(locationData);
-          setTags(postData.attributes.tags || []);
+          setTags(postData.attributes.tags.map(tag => tag.name));
 
           if (postData.attributes.image_urls) {
             const loadedImageUrls = postData.attributes.image_urls.map(image => ({
@@ -123,9 +123,13 @@ const EditPostComponent = ({ id, redirectPath = '/posts', onUpdate, onClose }) =
         formData.append('post[remove_image_ids][]', imageId);
       });
 
-      tags.forEach(tag => {
-        formData.append('post[tag_list][]', tag.trim());
-      });
+      if (tags.length > 0) {
+        tags.forEach(tag => {
+          formData.append('post[tag_list][]', tag);
+        });
+      } else {
+        formData.append('post[tag_list][]', '');
+      }
 
       if (token) {
         const config = {

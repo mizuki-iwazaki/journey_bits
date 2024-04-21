@@ -318,12 +318,12 @@ const PostsComponent = () => {
                         <div className="px-2">
                           {post.tags.map(tag => (
                             <span
-                              key={tag}
+                              key={tag.id}
                               className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-                              onClick={() => handleTagClick(tag)}
+                              onClick={() => handleTagClick(tag.name)}
                               style={{ cursor: 'pointer' }}
                             >
-                              #{tag}
+                              #{tag.name}
                             </span>
                           ))}
                         </div>

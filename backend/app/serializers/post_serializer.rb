@@ -44,7 +44,9 @@ class PostSerializer
   end
 
   attribute :tags do |post|
-    post.tag_list
+    post.tags.map do |tag|
+      { id: tag.id, name: tag.name }
+    end
   end
 
   belongs_to :user

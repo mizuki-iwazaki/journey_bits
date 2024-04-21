@@ -17,27 +17,24 @@ function TagEditor({ tags, setTags, className }) {
     }
   };
 
-  const removeTag = (indexToRemove) => {
-    setTags(tags.filter((_, index) => index !== indexToRemove));
+  const removeTag = (tagToRemove) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
   return (
     <div className={className}>
       <ul className="flex flex-wrap gap-2">
-        {Array.isArray(tags) && tags.map((tag, index) => (
-          <li key={index} className="bg-blue-200 rounded px-3 py-1 text-sm">
-            {tag}
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                removeTag(index);
-              }}
-              className="ml-2 text-red-500"
-            >
-              x
-            </button>
-          </li>
-        ))}
+      {Array.isArray(tags) && tags.map((tag) => (
+        <li key={tag} className="bg-blue-200 rounded px-3 py-1 text-sm">
+          {tag}
+          <button
+            onClick={() => removeTag(tag)}
+            className="ml-2 text-red-500"
+          >
+            x
+          </button>
+        </li>
+      ))}
       </ul>
       <input
         type="text"
