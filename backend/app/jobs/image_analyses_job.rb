@@ -1,4 +1,6 @@
 require 'google/cloud/vision'
+require 'base64'
+require 'json'
 
 class ImageAnalysesJob < ApplicationJob
   queue_as :default
@@ -6,17 +8,20 @@ class ImageAnalysesJob < ApplicationJob
   def perform(post_id)
     post = Post.find(post_id)
 
+    # 環境変数から認証情報をデコードし、Google Cloud APIに設定
+    credentials_json = Base64.decode64(ENV['GOOGLE_CREDENTIALS_ENCODED'])
+    credentials_hash = JSON.parse(credentials_json)
+    Google::Cloud::Vision.configure do |config|
+      config.credentials = credentials_hash
+    end
+
     vision = Google::Cloud::Vision.image_annotator
 
     post.images.each do |image|
-      # CloudinaryのURLを直接Google Cloud Vision APIに渡す
       response = vision.label_detection(image: image.image_file.url, max_results: 2)
-
-      # 解析結果を取得
       labels = response.responses.map(&:label_annotations).flatten
-
-      # 解析結果に基づいてAnalysisResultを作成、JSON形式で保存
       labels_data = labels.map(&:description)
+
       AnalysisResult.create!(
         post: post,
         image: image,
