@@ -4,11 +4,12 @@ class ImageAnalysesJob < ApplicationJob
   queue_as :default
 
   def perform(post_id)
+    # 環境変数から認証情報を自動的に読み込む
+    vision = Google::Cloud::Vision.image_annotator
+
     post = Post.find(post_id)
     post.images.each do |image|
-      # Google Cloud Vision APIクライアントを初期化
-      vision = Google::Cloud::Vision.image_annotator
-
+      # 画像解析を行う
       response = vision.label_detection image: image.image_file.url, max_results: 2
 
       # 解析結果を取得
@@ -24,6 +25,5 @@ class ImageAnalysesJob < ApplicationJob
     end
   rescue Google::Cloud::Error => e
     Rails.logger.error "Google Cloud Vision APIエラー: #{e.message}"
-    # エラーハンドリングのロジックをここに追加
   end
 end
