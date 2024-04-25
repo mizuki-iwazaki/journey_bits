@@ -53,7 +53,7 @@ const Recommendations = ({ isMapsLoaded }) => {
               ))}
               <p className="text-gray-500 text-left">Rating: {recommendation.rating || 'N/A'}</p>
               <p className="text-gray-500 text-left">レビュー数: {recommendation.user_ratings_total.toLocaleString()}件</p>
-              <p className="text-gray-700 text-left cursor-pointer" onClick={() => handleMapOpen(recommendation)}>
+              <p className="text-blue-500 underline text-left cursor-pointer" onClick={() => handleMapOpen(recommendation)}>
               {recommendation.address}
             </p>
             </div>
